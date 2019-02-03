@@ -1,4 +1,8 @@
-package hw1.lib;
+package hw1.server;
+
+import hw1.lib.HttpHandler;
+import hw1.lib.HttpRequest;
+import hw1.lib.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
