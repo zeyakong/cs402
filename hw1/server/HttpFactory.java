@@ -10,18 +10,18 @@ import java.net.URISyntaxException;
 
 public class HttpFactory {
     public static HttpRequest createRequest() {
-        // TO-DO: implement this method.  This method is almost certainly one line of code.
-        return null;
+        HttpRequest httpRequest = new HttpRequestImpl();
+        return httpRequest;
     }
 
     public static HttpResponse createResponse() {
-        // TO-DO: implement this method.  This method is almost certainly one line of code.
-        return null;
+        HttpResponse httpResponse = new HttpResponseImpl();
+        return httpResponse;
     }
 
     public static HttpHandler createHandler() {
-        // TO-DO: implement this method.  This method is almost certainly one line of code.    s
-        return null;
+        HttpHandler httpHandler = new HttpHandlerImpl();
+        return httpHandler;
     }
 
     public static void convertRawToRequestObject(BufferedReader rawRequest, HttpRequest request ) throws IOException, URISyntaxException {
