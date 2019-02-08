@@ -24,7 +24,6 @@ public class HttpFactory {
 
     public static void convertRawToRequestObject(BufferedReader rawRequest, HttpRequest request ) throws IOException, URISyntaxException {
         // TO-DO: implement this method.  This method will be longer.  It takes a valid HTTP request "string" (contained in the rawRequest object), parses it, and puts the data into the request
-//        if(!rawRequest.ready())return;
         String oneLine;
         String firstLine= rawRequest.readLine();
         String secondLine = rawRequest.readLine();
@@ -35,12 +34,7 @@ public class HttpFactory {
         request.setVersion(temp[2]);
         firstLine = temp[1];
         temp = secondLine.split(": ");
-        String version=request.getVersion();
-        String scheme;
-        if(version.equals("HTTP/1.1")) scheme = "http://";
-        else if(version.startsWith("HTTP/2"))scheme = "https://";
-        else scheme = version+"://";
-        String uriText = scheme+temp[1]+firstLine;
+        String uriText = "http://"+temp[1]+firstLine;
         URI uri = URI.create(uriText);
         request.setHost(uri.getHost());
         request.setPath(uri.getPath());
