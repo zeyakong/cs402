@@ -28,7 +28,6 @@ public class HttpFactory {
         String firstLine= rawRequest.readLine();
         String secondLine = rawRequest.readLine();
         String[]temp;
-        System.out.println(firstLine);
         //find method
         temp = firstLine.split(" ");
         request.setMethod(temp[0]);
@@ -65,11 +64,11 @@ public class HttpFactory {
         //Parse body
         while(rawRequest.ready()) body +=(char)rawRequest.read();
         request.setBody(body);
-        System.out.println();
     }
 
     public static String convertResponseToHttp( HttpResponse response ) {
         // TO-DO: implement this method.  This method takes a response object and generates a valid HTTP Response string.
-        return null;
+
+        return "HTTP/1.1 200 OJ8K\n\n<html><body><h1>Hello!!!!!!</h1></body></html>";
     }
 }

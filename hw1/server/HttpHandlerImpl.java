@@ -7,6 +7,7 @@ import hw1.lib.HttpResponse;
 public class HttpHandlerImpl implements HttpHandler {
     @Override
     public void process(HttpRequest request, HttpResponse response) {
-
+        if(request!=null) response.setStatusCode("200");
+        response.setHeader("Timestamp",new java.util.Date().toString());
     }
 }
