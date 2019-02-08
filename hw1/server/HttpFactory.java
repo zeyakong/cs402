@@ -48,8 +48,10 @@ public class HttpFactory {
             else temp = new String[]{queryText};
             String[] querys;
             for(String s:temp){
-                querys = s.split("=",2);
-                request.setQuery(querys[0],querys[1]);
+                if(s.contains("=")){
+                    querys = s.split("=",2);
+                    request.setQuery(querys[0],querys[1]);
+                }
             }
         }
         String body="";
@@ -67,7 +69,6 @@ public class HttpFactory {
 
     public static String convertResponseToHttp( HttpResponse response ) {
         // TO-DO: implement this method.  This method takes a response object and generates a valid HTTP Response string.
-
         return response.getVersion()+" "+ response.getStatusCode()+" "+response.getDescription()+"\n\n"+response.getBody();
     }
 }
