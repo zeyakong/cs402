@@ -24,6 +24,7 @@ public class HttpFactory {
 
     public static void convertRawToRequestObject(BufferedReader rawRequest, HttpRequest request ) throws IOException, URISyntaxException {
         // TO-DO: implement this method.  This method will be longer.  It takes a valid HTTP request "string" (contained in the rawRequest object), parses it, and puts the data into the request
+//        if(!rawRequest.ready())return;
         String oneLine;
         String firstLine= rawRequest.readLine();
         String secondLine = rawRequest.readLine();
@@ -46,13 +47,17 @@ public class HttpFactory {
         request.setPort(uri.getPort());
         request.setUrl(uri.toURL().toString());
         String queryText = uri.getQuery();
-        temp = queryText.split("&");
-        String[] querys;
-        for(String s:temp){
-            querys = s.split("=",2);
-            request.setQuery(querys[0],querys[1]);
+        if(queryText!=null && !queryText.equals("")){
+            if(queryText.contains("&")) {
+                temp = queryText.split("&");
+            }
+            else temp = new String[]{queryText};
+            String[] querys;
+            for(String s:temp){
+                querys = s.split("=",2);
+                request.setQuery(querys[0],querys[1]);
+            }
         }
-
         String body="";
         //Parse header
         while(rawRequest.ready()){
@@ -69,6 +74,6 @@ public class HttpFactory {
     public static String convertResponseToHttp( HttpResponse response ) {
         // TO-DO: implement this method.  This method takes a response object and generates a valid HTTP Response string.
 
-        return "HTTP/1.1 200 OJ8K\n\n<html><body><h1>Hello!!!!!!</h1></body></html>";
+        return response.getVersion()+" "+ response.getStatusCode()+" "+response.getDescription()+"\n\n"+response.getBody();
     }
 }
