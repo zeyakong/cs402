@@ -26,8 +26,13 @@
     $("button").click(function(){
         alert("do");
         $.ajax({
-            url: "http://localhost:88/a/b/c?valid[]=1,2,3&be-careful=yes=no=maybe",
-            method: "POST",
+            url: 'http://localhost:88/a/b/c?valid[]=1,2,3&be-careful=yes=no=maybe',
+            method: 'POST',
+            headers: {
+                'include_only':'first-line',
+                'jsd':'asd'
+            },
+            dataType: 'json',
             data:{
                 format: 'json',
                 para:'sd'

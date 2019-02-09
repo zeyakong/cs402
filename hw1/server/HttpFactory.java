@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.Set;
 
 public class HttpFactory {
     public static HttpRequest createRequest() {
@@ -52,6 +54,9 @@ public class HttpFactory {
                     querys = s.split("=",2);
                     request.setQuery(querys[0],querys[1]);
                 }
+                else{
+                    request.setQuery(s,"");
+                }
             }
         }
         String body="";
@@ -69,6 +74,13 @@ public class HttpFactory {
 
     public static String convertResponseToHttp( HttpResponse response ) {
         // TO-DO: implement this method.  This method takes a response object and generates a valid HTTP Response string.
-        return response.getVersion()+" "+ response.getStatusCode()+" "+response.getDescription()+"\n\n"+response.getBody();
+        String result = response.getVersion()+" "+ response.getStatusCode()+" "+response.getDescription()+"\n";
+        Set<String>  headersKey= response.getHeaderNames();
+        for(Iterator<String> i = headersKey.iterator();i.hasNext();){
+            String key = i.next();
+            result += key+": "+response.getHeader(key)+"\n";
+        }
+        result += "\n"+response.getBody();
+        return result;
     }
 }
