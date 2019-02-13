@@ -33,7 +33,7 @@ public class HttpHandlerImpl implements HttpHandler {
         Set<String> requestQueryKeys = request.getQueryNames();
         queryParameters.append( "<tr><th colspan=\"2\"><center>Query Parameters</center></th></tr>\n");
         if (requestQueryKeys.isEmpty()){
-            queryParameters.append("<tr><td colspan=\"2\">null</td></tr>\n");
+            queryParameters.append("<tr><td colspan=\"2\" style=\"text-align:center;\">null</td></tr>\n");
         }else{
             for (Iterator<String> i = requestQueryKeys.iterator(); i.hasNext(); ) {
                 String key = i.next();
