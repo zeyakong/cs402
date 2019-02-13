@@ -25,18 +25,36 @@ public class HttpFactory {
     }
 
     public static void convertRawToRequestObject(BufferedReader rawRequest, HttpRequest request ) throws IOException, URISyntaxException {
-        // TO-DO: implement this method.  This method will be longer.  It takes a valid HTTP request "string" (contained in the rawRequest object), parses it, and puts the data into the request
-        String oneLine;
+        //Parse first-line information. First line includes [method] [path] [version]
         String firstLine= rawRequest.readLine();
-        String secondLine = rawRequest.readLine();
+        //Some requests are null. ignore the null request.
+        if(firstLine==null ||firstLine.equals("")) return;
         String[]temp;
-        //find method
+        //find method and version
         temp = firstLine.split(" ");
         request.setMethod(temp[0]);
         request.setVersion(temp[2]);
-        firstLine = temp[1];
-        temp = secondLine.split(": ");
-        String uriText = "http://"+temp[1]+firstLine;
+        String path = temp[1];
+        //Parse the headers. The information of host and port are in the header part.
+        String oneLine;
+        String uriText="";
+        while(rawRequest.ready()){
+            oneLine = rawRequest.readLine();
+            //If the Parser find a empty line, which means the following is a body. So, break this function
+            if(oneLine.equals(""))break;
+            temp = oneLine.split(": ",2);
+            //host info is in this section
+            if(temp[0].equals("Host")){
+                uriText = "http://"+temp[1]+path;
+            }else{
+                request.setHeader(temp[0],temp[1]);
+            }
+        }
+        //Parse body
+        String body="";
+        while(rawRequest.ready()) body +=(char)rawRequest.read();
+        request.setBody(body);
+        //Parse the url by using Java URI api and find the queries
         URI uri = URI.create(uriText);
         request.setHost(uri.getHost());
         request.setPath(uri.getPath());
@@ -48,28 +66,17 @@ public class HttpFactory {
                 temp = queryText.split("&");
             }
             else temp = new String[]{queryText};
-            String[] querys;
+            String[] queries;
             for(String s:temp){
                 if(s.contains("=")){
-                    querys = s.split("=",2);
-                    request.setQuery(querys[0],querys[1]);
+                    queries = s.split("=",2);
+                    request.setQuery(queries[0],queries[1]);
                 }
                 else{
                     request.setQuery(s,"");
                 }
             }
         }
-        String body="";
-        //Parse header
-        while(rawRequest.ready()){
-            oneLine = rawRequest.readLine();
-            if(oneLine.equals(""))break;
-            temp = oneLine.split(": ",2);
-            request.setHeader(temp[0],temp[1]);
-        }
-        //Parse body
-        while(rawRequest.ready()) body +=(char)rawRequest.read();
-        request.setBody(body);
     }
 
     public static String convertResponseToHttp( HttpResponse response ) {
