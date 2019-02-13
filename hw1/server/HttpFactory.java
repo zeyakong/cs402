@@ -24,12 +24,12 @@ public class HttpFactory {
         return new HttpHandlerImpl();
     }
 
-    public static void convertRawToRequestObject(BufferedReader rawRequest, HttpRequest request ) throws IOException, URISyntaxException {
+    public static void convertRawToRequestObject(BufferedReader rawRequest, HttpRequest request) throws IOException, URISyntaxException {
         //Parse first-line information. First line includes [method] [path] [version]
-        String firstLine= rawRequest.readLine();
+        String firstLine = rawRequest.readLine();
         //Some requests are null. ignore the null request.
-        if(firstLine==null ||firstLine.equals("")) return;
-        String[]temp;
+        if (firstLine == null || firstLine.equals("")) return;
+        String[] temp;
         //find method and version
         temp = firstLine.split(" ");
         request.setMethod(temp[0]);
@@ -37,22 +37,22 @@ public class HttpFactory {
         String path = temp[1];
         //Parse the headers. The information of host and port are in the header part.
         String oneLine;
-        String uriText="";
-        while(rawRequest.ready()){
+        String uriText = "";
+        while (rawRequest.ready()) {
             oneLine = rawRequest.readLine();
             //If the Parser find a empty line, which means the following is a body. So, break this function
-            if(oneLine.equals(""))break;
-            temp = oneLine.split(": ",2);
+            if (oneLine.equals("")) break;
+            temp = oneLine.split(": ", 2);
             //host info is in this section
-            if(temp[0].equals("Host")){
-                uriText = "http://"+temp[1]+path;
-            }else{
-                request.setHeader(temp[0],temp[1]);
+            if (temp[0].equals("Host")) {
+                uriText = "http://" + temp[1] + path;
+            } else {
+                request.setHeader(temp[0], temp[1]);
             }
         }
         //Parse body
-        String body="";
-        while(rawRequest.ready()) body +=(char)rawRequest.read();
+        String body = "";
+        while (rawRequest.ready()) body += (char) rawRequest.read();
         request.setBody(body);
         //Parse the url by using Java URI api and find the queries
         URI uri = URI.create(uriText);
@@ -61,33 +61,31 @@ public class HttpFactory {
         request.setPort(uri.getPort());
         request.setUrl(uri.toURL().toString());
         String queryText = uri.getQuery();
-        if(queryText!=null && !queryText.equals("")){
-            if(queryText.contains("&")) {
+        if (queryText != null && !queryText.equals("")) {
+            if (queryText.contains("&")) {
                 temp = queryText.split("&");
-            }
-            else temp = new String[]{queryText};
+            } else temp = new String[]{queryText};
             String[] queries;
-            for(String s:temp){
-                if(s.contains("=")){
-                    queries = s.split("=",2);
-                    request.setQuery(queries[0],queries[1]);
-                }
-                else{
-                    request.setQuery(s,"");
+            for (String s : temp) {
+                if (s.contains("=")) {
+                    queries = s.split("=", 2);
+                    request.setQuery(queries[0], queries[1]);
+                } else {
+                    request.setQuery(s, "");
                 }
             }
         }
     }
 
-    public static String convertResponseToHttp( HttpResponse response ) {
+    public static String convertResponseToHttp(HttpResponse response) {
         // TO-DO: implement this method.  This method takes a response object and generates a valid HTTP Response string.
-        String result = response.getVersion()+" "+ response.getStatusCode()+" "+response.getDescription()+"\n";
-        Set<String>  headersKey= response.getHeaderNames();
-        for(Iterator<String> i = headersKey.iterator();i.hasNext();){
+        String result = response.getVersion() + " " + response.getStatusCode() + " " + response.getDescription() + "\n";
+        Set<String> headersKey = response.getHeaderNames();
+        for (Iterator<String> i = headersKey.iterator(); i.hasNext(); ) {
             String key = i.next();
-            result += key+": "+response.getHeader(key)+"\n";
+            result += key + ": " + response.getHeader(key) + "\n";
         }
-        result += "\n"+response.getBody();
+        result += "\n" + response.getBody();
         return result;
     }
 }

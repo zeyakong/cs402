@@ -8,7 +8,7 @@ import java.util.Set;
 public class HttpResponseImpl implements HttpResponse {
     private String version;
     private String statusCode;
-    private HashMap<String,String> header = new HashMap<>();
+    private HashMap<String, String> header = new HashMap<>();
     private String description;
     private String body;
 
@@ -44,7 +44,7 @@ public class HttpResponseImpl implements HttpResponse {
 
     @Override
     public void setVersion(String version) {
-        this.version =version;
+        this.version = version;
     }
 
     @Override
@@ -64,6 +64,6 @@ public class HttpResponseImpl implements HttpResponse {
 
     @Override
     public void setHeader(String key, String value) {
-        header.put(key,value);
+        header.put(key, value);
     }
 }

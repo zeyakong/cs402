@@ -8,13 +8,13 @@ import java.util.Set;
 public class HttpRequestImpl implements HttpRequest {
     private String method;
     private String version;
-    private HashMap<String,String> query = new HashMap<>();
+    private HashMap<String, String> query = new HashMap<>();
     private String path;
     private String url;
     private String host;
     private String body;
     private Integer port;
-    private HashMap<String,String> header = new HashMap<>();
+    private HashMap<String, String> header = new HashMap<>();
 
     @Override
     public void setMethod(String method) {
@@ -33,12 +33,12 @@ public class HttpRequestImpl implements HttpRequest {
 
     @Override
     public void setQuery(String key, String value) {
-        query.put(key,value);
+        query.put(key, value);
     }
 
     @Override
     public void setHeader(String key, String value) {
-        header.put(key,value);
+        header.put(key, value);
     }
 
     @Override
