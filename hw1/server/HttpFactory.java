@@ -78,13 +78,13 @@ public class HttpFactory {
     }
 
     public static String convertResponseToHttp(HttpResponse response) {
-        // TO-DO: implement this method.  This method takes a response object and generates a valid HTTP Response string.
         String result = response.getVersion() + " " + response.getStatusCode() + " " + response.getDescription() + "\n";
         Set<String> headersKey = response.getHeaderNames();
         for (Iterator<String> i = headersKey.iterator(); i.hasNext(); ) {
             String key = i.next();
             result += key + ": " + response.getHeader(key) + "\n";
         }
+        //one empty line to separate the body and headers.
         result += "\n" + response.getBody();
         return result;
     }
