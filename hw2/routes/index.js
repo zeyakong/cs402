@@ -4,21 +4,27 @@ var router = express.Router();
 var path = require('path');
 
 //################ variables ####################
-var font = {
-    category: "",
-    family: "",
-    link: ""
-};
+
+function token(id, name,url) {
+    this.id = id;
+    this.name=name;
+    this.url = url;
+}
+
+
+// var token = {
+//     id: "",
+//     name: "",
+//     url: ""
+// };
 
 var theme = {
-    font: font,
     color: "",
     playerToken: "",
     computerToken: ""
 };
 
 var metadata = {
-    fonts: [],
     tokens: [],
     default: theme
 };
@@ -53,7 +59,7 @@ router.get('/connectfour/api/v1/meta', function (req, res, next) {
     metadata.fonts = "";
     metadata.default.color = "red";
     metadata.default.font = font;
-    res.send(metadata)
+    res.send(metadata);
 });
 
 //get a list of font objects: [font]
