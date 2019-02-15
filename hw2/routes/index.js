@@ -1,6 +1,7 @@
 var express = require('express');
 var uuid = require('uuid');
 var router = express.Router();
+var path = require('path');
 
 //################ variables ####################
 var font = {
@@ -38,12 +39,13 @@ var error = {
 //################ routers ######################
 //return the whole html index file( the whole app)
 router.get('/connectfour', function (req, res, next) {
-    res.render('index');
+    res.sendFile(path.join(__dirname+'/../public/index.html'));
 });
 
 //get the sid from the response
 router.get('/connectfour/api/v1/sids', function (req, res, next) {
-    res.send(uuid.v4());
+    res.setHeader('X-sid',uuid.v4());
+    res.send();
 });
 
 //get a meta object from the response
