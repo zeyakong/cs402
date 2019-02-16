@@ -3,20 +3,13 @@ var uuid = require('uuid');
 var router = express.Router();
 var path = require('path');
 
-//################ variables ####################
+//######### variables & constructors ###########
 
-function token(id, name,url) {
+function Token(id, name,url) {
     this.id = id;
     this.name=name;
     this.url = url;
 }
-
-
-// var token = {
-//     id: "",
-//     name: "",
-//     url: ""
-// };
 
 var theme = {
     color: "",
@@ -29,18 +22,22 @@ var metadata = {
     default: theme
 };
 
-var game = {
-    theme: theme,
-    id: "",
-    unoccupied: 123,
-    status: "unfinished",
-    timestamp: 123,
-    timeToComplete: 123,
-    view: [[]]
-};
+function Game(them,id,status,start,finish,grid){
+    this.theme= theme;
+    this.id = id;
+    this.status=status;
+    this.start =  start;
+    this.finish= finish;
+    this.grid= grid;
+}
+
 var error = {
     msg: ""
 };
+
+var GameDB = {};
+//################ functions ####################
+
 
 //################ routers ######################
 //return the whole html index file( the whole app)
@@ -56,34 +53,31 @@ router.get('/connectfour/api/v1/sids', function (req, res, next) {
 
 //get a meta object from the response
 router.get('/connectfour/api/v1/meta', function (req, res, next) {
-    metadata.fonts = "";
-    metadata.default.color = "red";
-    metadata.default.font = font;
+    metadata.default.color = "#ff0000"; //red
+    var tokenList = [new Token("t1","t one","url t1"),new Token("2","t two","url t2")];
+    metadata.default.playerToken = tokenList[0];
+    metadata.default.computerToken = tokenList[1];
+    metadata.tokens = tokenList;
     res.send(metadata);
 });
 
-//get a list of font objects: [font]
-router.get('/connectfour/api/v1/meta/fonts', function (req, res, next) {
-
-});
-
 // get the list of all the games.
-router.get('/connectfour/api/v1/:sid', function (req, res, next) {
+router.get('/connectfour/api/v1/sids/:sid', function (req, res, next) {
 
 });
 
 // create a new game with this sid.
-router.post('/connectfour/api/v1/:sid', function (req, res, next) {
+router.post('/connectfour/api/v1/sids/:sid', function (req, res, next) {
 
 });
 
-// get the game object with the specific sid and gid
-router.get('/connectfour/api/v1/:sid/:gid', function (req, res, next) {
+//This endpoint delivers the game associated with the specified SID and having the specified game id.
+router.get('/connectfour/api/v1/sids/:sid/gids/:gid', function (req, res, next) {
 
 });
 
 //get the game object by this move. move is a query param
-router.post('/connectfour/api/v1/:sid/:gid/move', function (req, res, next) {
+router.post('/connectfour/api/v1/sids/:sid/gids/:gid', function (req, res, next) {
 
 });
 

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css">
-    <title>connect 4</title>
+    <title>Game: Connect 4</title>
 </head>
 <body>
 
@@ -19,20 +19,20 @@
             <div class="input-group-prepend">
                 <label class="input-group-text">Color</label>
             </div>
-            <input type="color" id="color" class="form-control" style="width: 60px">
+            <input type="color" id="color" class="form-control" style="width: 50px">
         </div>
         <div class="input-group ml-1">
             <div class="input-group-prepend">
                 <label class="input-group-text" >Player</label>
             </div>
             <select class="custom-select" id="player_token">
-                <option selected>Green Girl</option>
-                <option value="1">2</option>
-                <option value="2">3</option>
-                <option value="3">4</option>
-                <option value="4">5</option>
-                <option value="5">6</option>
-                <option value="6">7</option>
+                <option selected>chrome</option>
+                <option value="1">windows</option>
+                <option value="2">linux</option>
+                <option value="3">ie</option>
+                <option value="4">firefox</option>
+                <option value="5">android</option>
+                <option value="6">opera</option>
             </select>
         </div>
         <div class="input-group ml-1">
@@ -40,13 +40,13 @@
                 <label class="input-group-text">Computer</label>
             </div>
             <select class="custom-select" id="computer_token">
-                <option selected>Green Girl</option>
-                <option value="1">2</option>
-                <option value="2">3</option>
-                <option value="3">4</option>
-                <option value="4">5</option>
-                <option value="5">6</option>
-                <option value="6">7</option>
+                <option selected>chrome</option>
+                <option value="1">windows</option>
+                <option value="2">linux</option>
+                <option value="3">ie</option>
+                <option value="4">firefox</option>
+                <option value="5">android</option>
+                <option value="6">opera</option>
             </select>
         </div>
         <button class="btn btn-primary ml-2" onclick="createNewGame()">CREATE</button>
@@ -81,6 +81,14 @@
         </tr>
         </tbody>
     </table>
+    <hr>
+    <img src="/assets/linux.png" class="rounded-circle" alt="token1">
+    <img src="/assets/chrome.png" class="rounded-circle" alt="token1">
+    <img src="/assets/windows.png" class="rounded-circle" alt="token1">
+    <img src="/assets/explorer.png" class="rounded-circle" alt="token1">
+    <img src="/assets/mozilla.png" class="rounded-circle" alt="token1">
+    <img src="/assets/opera.png" class="rounded-circle" alt="token1">
+    <img src="/assets/android.png" class="rounded-circle" alt="token1">
 </div>
 
 <!-- Optional JavaScript -->
@@ -95,6 +103,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="js/index.js"></script>
+<script src="/js/index.js"></script>
 </body>
 </html>
