@@ -7,8 +7,25 @@ var metadata;
 //init function
 $(document).ready(function () {
     loadMetadata();
-    getSID();
+    if(!sid){
+        getSID();
+    }
 });
+
+function showGameList(data) {
+    $("#tbody_id").empty();
+    for(var i=0;i<data.length;i++){
+        console.log(i+"add one row");
+        $("#game_list").append("<tr>\n" +
+            "            <td>"+data[i].status+"</td>\n" +
+            "            <td>"+data[i].theme.playerToken+"</td>\n" +
+            "            <td>"+data[i].theme.computerToken+"</td>\n" +
+            "            <td>"+data[i].start+"</td>\n" +
+            "            <td>"+data[i].finish+"</td>\n" +
+            "            <td><button class=\"btn btn-warning btn-sm\">view</button></td>\n" +
+            "        </tr>");
+    }
+}
 
 //This function will update the html page: playerToken and computerToken status.
 function updateToken() {
@@ -30,7 +47,7 @@ function createNewGame() {
     var computerTokenId = $("#computer_token").val();
     $.ajax({
         //colorValue is a special value start with #.So, must encoded
-        url: '/connectfour/api/v1/sids/' + sid+'?color='+encodeURIComponent(colorValue),
+        url: '/connectfour/api/v1/sids/' + sid + '?color=' + encodeURIComponent(colorValue),
         method: 'POST',
         data: {
             "playerToken": playerTokenId,
@@ -38,7 +55,9 @@ function createNewGame() {
         },
         dataType: 'json',
         success: function (data) {
-            console.log(data)
+            // a specific game object
+            // console.log(data);
+            getGameList();
         }
     })
 }
@@ -63,6 +82,18 @@ function getSID() {
         method: 'GET',
         success: function (data, textStatus, request) {
             sid = request.getResponseHeader('X-sid');
+        }
+    })
+}
+
+function getGameList() {
+    $.ajax({
+        url: '/connectfour/api/v1/sids/' + sid,
+        method: 'GET',
+        success: function (data) {
+            // a list of game objects
+            console.log(data);
+            showGameList(data);
         }
     })
 }

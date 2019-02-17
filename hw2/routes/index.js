@@ -2,6 +2,7 @@ var express = require('express');
 var uuid = require('uuid');
 var router = express.Router();
 var path = require('path');
+var dateFormat = require('dateformat');
 
 //######### variables & constructors ###########
 
@@ -67,7 +68,7 @@ router.get('/connectfour/api/v1/sids/:sid', function (req, res, next) {
     if (GameDB[sid]) {
         res.send(GameDB[sid]);
     } else {
-        res.status(404).send(error.msg="Not found! Check the sid.");
+        res.status(418).send(error.msg = "Not found! Check the sid.");
     }
 });
 
@@ -86,7 +87,11 @@ router.post('/connectfour/api/v1/sids/:sid', function (req, res, next) {
         [" ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " ", " "]
     ];
-    GameDB[sid] = new Game(theme, uuid.v4(), "UNFINISHED", new Date(), "", grid);
+    if (GameDB[sid]) {
+        GameDB[sid].push(new Game(theme, uuid.v4(), "UNFINISHED", dateFormat(new Date(), "ddd mmm d yyyy"), "", grid));
+    } else {
+        GameDB[sid] = [new Game(theme, uuid.v4(), "UNFINISHED", dateFormat(new Date(), "ddd mmm d yyyy"), "", grid)];
+    }
     res.send(GameDB[sid]);
 });
 
