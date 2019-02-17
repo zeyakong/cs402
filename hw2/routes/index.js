@@ -54,7 +54,7 @@ router.get('/connectfour/api/v1/sids', function (req, res, next) {
 //get a meta object from the response
 router.get('/connectfour/api/v1/meta', function (req, res, next) {
     metadata.default.color = "#ff0000"; //red
-    var tokenList = [new Token("t1","t one","url t1"),new Token("2","t two","url t2")];
+    var tokenList = [new Token("t1","ie","url t1"),new Token("2","chrome","url t2")];
     metadata.default.playerToken = tokenList[0];
     metadata.default.computerToken = tokenList[1];
     metadata.tokens = tokenList;
