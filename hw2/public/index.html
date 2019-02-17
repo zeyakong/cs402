@@ -14,7 +14,7 @@
 <body>
 
 <div class="container">
-    <form class="form-inline mt-5" style="width: 800px;">
+    <div class="form-inline mt-5" style="width: 800px;">
         <div class="input-group">
             <div class="input-group-prepend">
                 <label class="input-group-text">Color</label>
@@ -25,7 +25,7 @@
             <div class="input-group-prepend">
                 <label class="input-group-text" >Player</label>
             </div>
-            <select class="custom-select" id="player_token" onchange="changeToken()">
+            <select class="custom-select" id="player_token" onchange="updateToken()">
                 <option value="chrome">chrome</option>
                 <option value="windows">windows</option>
                 <option value="linux">linux</option>
@@ -39,7 +39,7 @@
             <div class="input-group-prepend">
                 <label class="input-group-text">Computer</label>
             </div>
-            <select class="custom-select" id="computer_token" onchange="changeToken()">
+            <select class="custom-select" id="computer_token" onchange="updateToken()">
                 <option value="chrome">chrome</option>
                 <option value="windows">windows</option>
                 <option value="linux">linux</option>
@@ -50,7 +50,7 @@
             </select>
         </div>
         <button class="btn btn-primary ml-2" onclick="createNewGame()">CREATE</button>
-    </form>
+    </div>
     <table class="table table-striped mt-4">
         <thead>
         <tr class="table-secondary">
