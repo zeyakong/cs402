@@ -1,5 +1,6 @@
 //############ global variables ############
 var sid;
+var gid;
 var metadata;
 
 
@@ -18,11 +19,11 @@ function showGameList(data) {
         console.log(i+"add one row");
         $("#game_list").append("<tr>\n" +
             "            <td>"+data[i].status+"</td>\n" +
-            "            <td>"+data[i].theme.playerToken+"</td>\n" +
-            "            <td>"+data[i].theme.computerToken+"</td>\n" +
+            "            <td><img class='icon rounded-cycle' src='/assets/"+data[i].theme.playerToken+".png'></td>\n" +
+            "            <td><img class='icon rounded-cycle' src='/assets/"+data[i].theme.computerToken+".png'></td>\n" +
             "            <td>"+data[i].start+"</td>\n" +
             "            <td>"+data[i].finish+"</td>\n" +
-            "            <td><button class=\"btn btn-warning btn-sm\">view</button></td>\n" +
+            "            <td><button class=\"btn btn-sm\" style='background-color: "+data[i].theme.color+"'>view</button></td>\n" +
             "        </tr>");
     }
 }
@@ -96,4 +97,9 @@ function getGameList() {
             showGameList(data);
         }
     })
+}
+
+//use sid and gid to get the current game object by using ajax.
+function getGame(){
+
 }

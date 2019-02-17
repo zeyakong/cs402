@@ -12,18 +12,14 @@ function Token(id, name, url) {
     this.url = url;
 }
 
-var theme = {
-    color: "",
-    playerToken: "",
-    computerToken: ""
-};
+function Theme(color, playerToken, computerToken) {
+    this.color = color;
+    this.playerToken = playerToken;
+    this.computerToken = computerToken;
+}
 
-var metadata = {
-    tokens: [],
-    default: theme
-};
 
-function Game(them, id, status, start, finish, grid) {
+function Game(theme, id, status, start, finish, grid) {
     this.theme = theme;
     this.id = id;
     this.status = status;
@@ -32,9 +28,10 @@ function Game(them, id, status, start, finish, grid) {
     this.grid = grid;
 }
 
-var error = {
-    msg: ""
-};
+
+function Error(msg) {
+    this.msg = msg;
+}
 
 var GameDB = {};
 //################ functions ####################
@@ -54,11 +51,11 @@ router.get('/connectfour/api/v1/sids', function (req, res, next) {
 
 //get a meta object from the response
 router.get('/connectfour/api/v1/meta', function (req, res, next) {
-    metadata.default.color = "#ff0000"; //red
-    var tokenList = [new Token("t1", "ie", "url t1"), new Token("2", "chrome", "url t2")];
-    metadata.default.playerToken = tokenList[0];
-    metadata.default.computerToken = tokenList[1];
-    metadata.tokens = tokenList;
+    var tokenList = [new Token("t1", "android", "url t1"), new Token("2", "chrome", "url t2")];
+    var metadata = {
+        default: new Theme("#ff0000", tokenList[0], tokenList[1]),
+        tokens: tokenList
+    };
     res.send(metadata);
 });
 
@@ -68,18 +65,14 @@ router.get('/connectfour/api/v1/sids/:sid', function (req, res, next) {
     if (GameDB[sid]) {
         res.send(GameDB[sid]);
     } else {
-        res.status(418).send(error.msg = "Not found! Check the sid.");
+        res.status(418).send(new Error("Not found! Check the sid."));
     }
 });
 
 // create a new game with this sid.
 router.post('/connectfour/api/v1/sids/:sid', function (req, res, next) {
-    //query parameter
-    theme.color = req.query.color;
-    //path parameter
-    var sid = req.params.sid;
-    theme.computerToken = req.body.computerToken;
-    theme.playerToken = req.body.playerToken;
+    sid = req.params.sid;
+    var theme = new Theme(req.query.color, req.body.playerToken, req.body.computerToken);
     var grid = [
         [" ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " ", " "],
