@@ -65,7 +65,7 @@ router.get('/connectfour/api/v1/sids/:sid', function (req, res, next) {
     if (GameDB[sid]) {
         res.send(GameDB[sid]);
     } else {
-        res.status(418).send(new Error("Not found! Check the sid."));
+        res.status(200).send(new Error("Not found! Check the sid."));
     }
 });
 

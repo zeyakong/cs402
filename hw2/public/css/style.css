@@ -2,14 +2,14 @@ body, html {
     font-size: 15px;
 }
 
-img {
-    height: 70px;
-    width: 70px;
+.icon {
+    /*height: 40px;*/
+    /*width: 40px;*/
     border-radius: 50%;
     border:1px solid #021a40;
 }
 
-.icon {
+.avatar{
     height: 40px;
     width: 40px;
 }

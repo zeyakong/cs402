@@ -14,65 +14,119 @@
 <body>
 
 <div class="container">
-    <div class="form-inline mt-5" style="width: 800px;">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <label class="input-group-text">Color</label>
+    <!--This content is the main page-->
+    <div id="main_page">
+        <div class="form-inline mt-5" style="width: 800px;">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Color</label>
+                </div>
+                <input type="color" id="color" class="form-control" style="width: 50px">
             </div>
-            <input type="color" id="color" class="form-control" style="width: 50px">
-        </div>
-        <div class="input-group ml-1">
-            <div class="input-group-prepend">
-                <label class="input-group-text" >Player</label>
+            <div class="input-group ml-1">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" >Player</label>
+                </div>
+                <select class="custom-select" id="player_token" onchange="updateToken()">
+                    <option value="chrome">chrome</option>
+                    <option value="windows">windows</option>
+                    <option value="linux">linux</option>
+                    <option value="explorer">explorer</option>
+                    <option value="mozilla">mozilla</option>
+                    <option value="android">android</option>
+                    <option value="opera">opera</option>
+                </select>
             </div>
-            <select class="custom-select" id="player_token" onchange="updateToken()">
-                <option value="chrome">chrome</option>
-                <option value="windows">windows</option>
-                <option value="linux">linux</option>
-                <option value="explorer">explorer</option>
-                <option value="mozilla">mozilla</option>
-                <option value="android">android</option>
-                <option value="opera">opera</option>
-            </select>
-        </div>
-        <div class="input-group ml-1">
-            <div class="input-group-prepend">
-                <label class="input-group-text">Computer</label>
+            <div class="input-group ml-1">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Computer</label>
+                </div>
+                <select class="custom-select" id="computer_token" onchange="updateToken()">
+                    <option value="chrome">chrome</option>
+                    <option value="windows">windows</option>
+                    <option value="linux">linux</option>
+                    <option value="explorer">explorer</option>
+                    <option value="mozilla">mozilla</option>
+                    <option value="android">android</option>
+                    <option value="opera">opera</option>
+                </select>
             </div>
-            <select class="custom-select" id="computer_token" onchange="updateToken()">
-                <option value="chrome">chrome</option>
-                <option value="windows">windows</option>
-                <option value="linux">linux</option>
-                <option value="explorer">explorer</option>
-                <option value="mozilla">mozilla</option>
-                <option value="android">android</option>
-                <option value="opera">opera</option>
-            </select>
+            <button class="btn btn-primary ml-2" onclick="createNewGame()">CREATE</button>
         </div>
-        <button class="btn btn-primary ml-2" onclick="createNewGame()">CREATE</button>
+        <table class="table table-striped mt-4" id="game_list">
+            <thead>
+            <tr class="table-secondary">
+                <th scope="col">Status</th>
+                <th scope="col">Player</th>
+                <th scope="col">Computer</th>
+                <th scope="col">Time Started</th>
+                <th scope="col">Time Finished</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody id="tbody_id">
+            </tbody>
+        </table>
+        <button class="btn btn-sm" onclick="showGameContent()">show game</button>
     </div>
-    <table class="table table-striped mt-4" id="game_list">
-        <thead>
-        <tr class="table-secondary">
-            <th scope="col">Status</th>
-            <th scope="col">Player</th>
-            <th scope="col">Computer</th>
-            <th scope="col">Time Started</th>
-            <th scope="col">Time Finished</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody id="tbody_id">
-        </tbody>
-    </table>
-    <hr>
-    <img src="/assets/linux.png"  alt="token1">
-    <img src="/assets/chrome.png" alt="token1">
-    <img src="/assets/windows.png" alt="token1">
-    <img src="/assets/explorer.png" alt="token1">
-    <img src="/assets/mozilla.png" alt="token1">
-    <img src="/assets/opera.png" alt="token1">
-    <img src="/assets/android.png" alt="token1">
+
+    <!--This content is one game detail page-->
+    <div id="game_detail" class="text-center">
+        <button class="btn btn-primary mt-5" style="width: 80%" onclick="getGameList()">Return</button>
+        <div class="text-center">
+            <img class="mt-4" style="height: 100px; width: 700px;" src="assets/winner.gif">
+            <div id="game_board" class="mx-auto" style="width: 700px;height:500px;">
+                <div class="row" style="height: 20%;background-color: antiquewhite" >
+                    <div class="col" style="background-color: aqua;height: 100%;">
+                        <div style="background-color: burlywood;height: 100%;width: 100%" class="icon"></div>
+                    </div>
+                    <div class="col my-auto">2</div>
+                    <div class="col my-auto">3</div>
+                    <div class="col my-auto">4</div>
+                    <div class="col my-auto">5</div>
+                    <div class="col my-auto">6</div>
+                    <div class="col my-auto">7</div>
+                </div>
+                <div class="row" style="height: 20%;background-color: antiquewhite" >
+                    <div class="col my-auto">1</div>
+                    <div class="col my-auto">2</div>
+                    <div class="col my-auto">3</div>
+                    <div class="col my-auto">4</div>
+                    <div class="col my-auto">5</div>
+                    <div class="col my-auto">6</div>
+                    <div class="col my-auto">7</div>
+                </div>
+                <div class="row mx-auto" style="height: 20%;background-color: antiquewhite" >
+                    <div class="col my-auto">1</div>
+                    <div class="col my-auto">2</div>
+                    <div class="col my-auto">3</div>
+                    <div class="col my-auto">4</div>
+                    <div class="col my-auto">5</div>
+                    <div class="col my-auto">6</div>
+                    <div class="col my-auto">7</div>
+                </div>
+                <div class="row mx-auto" style="height: 20%;background-color: antiquewhite" >
+                    <div class="col my-auto">1</div>
+                    <div class="col my-auto">2</div>
+                    <div class="col my-auto">3</div>
+                    <div class="col my-auto">4</div>
+                    <div class="col my-auto">5</div>
+                    <div class="col my-auto">6</div>
+                    <div class="col my-auto">7</div>
+                </div>
+                <div class="row mx-auto" style="height: 20%;background-color: antiquewhite" >
+                    <div class="col my-auto">1</div>
+                    <div class="col my-auto">2</div>
+                    <div class="col my-auto">3</div>
+                    <div class="col my-auto">4</div>
+                    <div class="col my-auto">5</div>
+                    <div class="col my-auto">6</div>
+                    <div class="col my-auto">7</div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
 </div>
 
 <!-- Optional JavaScript -->
