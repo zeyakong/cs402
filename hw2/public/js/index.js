@@ -8,42 +8,51 @@ var metadata;
 //init function
 $(document).ready(function () {
     loadMetadata();
-    hideGameContent();
+    setPage('main');
     if (!sid) {
         getSID();
     }
 });
 
-//This function only shows the html page for a current game.
-function showGameContent() {
-    $("#main_page").slideUp();
-    $("#game_detail").slideDown();
+function showGameControl() {
+
 }
 
-//This function is opposite to the showGameContent.
-function hideGameContent() {
-    $("#main_page").slideDown();
-    $("#game_detail").slideUp();
+function showGameBoard() {
+
+}
+
+function setPage(content) {
+    if (content === 'game') {
+        $("#main_page").hide();
+        $("#game_detail").show();
+    } else if (content === 'main') {
+        $("#main_page").show();
+        $("#game_detail").hide();
+    }
 }
 
 //This function shows the object game by drawing the chess board.
 function showGameDetail(game) {
-    showGameContent();
+    setPage('game');
+    showGameControl(game);
+    showGameBoard(game)
 }
 
 //show the list of games in main content in index.html page.
 function showGameList(data) {
-    hideGameContent();
+    setPage('main');
     $("#tbody_id").empty();
     for (var i = 0; i < data.length; i++) {
         console.log(i + "add one row");
+        gid = data[i].id;
         $("#game_list").append("<tr>\n" +
             "            <td>" + data[i].status + "</td>\n" +
             "            <td><img class='icon avatar' src='/assets/" + data[i].theme.playerToken + ".png'></td>\n" +
             "            <td><img class='icon avatar' src='/assets/" + data[i].theme.computerToken + ".png'></td>\n" +
             "            <td>" + data[i].start + "</td>\n" +
             "            <td>" + data[i].finish + "</td>\n" +
-            "            <td><button class=\"btn btn-sm\" style='background-color: " + data[i].theme.color + "'>view</button></td>\n" +
+            "            <td><button class=\"btn btn-sm\" style='background-color: " + data[i].theme.color + "' onclick='getGame(gid)'>view</button></td>\n" +
             "        </tr>");
     }
 }

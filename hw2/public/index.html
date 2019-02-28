@@ -4,7 +4,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -25,7 +24,7 @@
             </div>
             <div class="input-group ml-1">
                 <div class="input-group-prepend">
-                    <label class="input-group-text" >Player</label>
+                    <label class="input-group-text">Player</label>
                 </div>
                 <select class="custom-select" id="player_token" onchange="updateToken()">
                     <option value="chrome">chrome</option>
@@ -69,60 +68,16 @@
         </table>
         <button class="btn btn-sm" onclick="showGameContent()">show game</button>
     </div>
-
     <!--This content is one game detail page-->
     <div id="game_detail" class="text-center">
         <button class="btn btn-primary mt-5" style="width: 80%" onclick="getGameList()">Return</button>
-        <div class="text-center">
-            <img class="mt-4" style="height: 100px; width: 700px;" src="assets/winner.gif">
+        <div class="text-center mt-4">
+            <div id="game_control" class="mx-auto">
+                Game control<br> 700px x 100px
+                <!--<img class="mt-4" style="height: 100px; width: 700px;" src="assets/winner.gif">-->
+            </div>
             <div id="game_board" class="mx-auto" style="width: 700px;height:500px;">
-                <div class="row" style="height: 20%;background-color: antiquewhite" >
-                    <div class="col" style="background-color: aqua;height: 100%;">
-                        <div style="background-color: burlywood;height: 100%;width: 100%" class="icon"></div>
-                    </div>
-                    <div class="col my-auto">2</div>
-                    <div class="col my-auto">3</div>
-                    <div class="col my-auto">4</div>
-                    <div class="col my-auto">5</div>
-                    <div class="col my-auto">6</div>
-                    <div class="col my-auto">7</div>
-                </div>
-                <div class="row" style="height: 20%;background-color: antiquewhite" >
-                    <div class="col my-auto">1</div>
-                    <div class="col my-auto">2</div>
-                    <div class="col my-auto">3</div>
-                    <div class="col my-auto">4</div>
-                    <div class="col my-auto">5</div>
-                    <div class="col my-auto">6</div>
-                    <div class="col my-auto">7</div>
-                </div>
-                <div class="row mx-auto" style="height: 20%;background-color: antiquewhite" >
-                    <div class="col my-auto">1</div>
-                    <div class="col my-auto">2</div>
-                    <div class="col my-auto">3</div>
-                    <div class="col my-auto">4</div>
-                    <div class="col my-auto">5</div>
-                    <div class="col my-auto">6</div>
-                    <div class="col my-auto">7</div>
-                </div>
-                <div class="row mx-auto" style="height: 20%;background-color: antiquewhite" >
-                    <div class="col my-auto">1</div>
-                    <div class="col my-auto">2</div>
-                    <div class="col my-auto">3</div>
-                    <div class="col my-auto">4</div>
-                    <div class="col my-auto">5</div>
-                    <div class="col my-auto">6</div>
-                    <div class="col my-auto">7</div>
-                </div>
-                <div class="row mx-auto" style="height: 20%;background-color: antiquewhite" >
-                    <div class="col my-auto">1</div>
-                    <div class="col my-auto">2</div>
-                    <div class="col my-auto">3</div>
-                    <div class="col my-auto">4</div>
-                    <div class="col my-auto">5</div>
-                    <div class="col my-auto">6</div>
-                    <div class="col my-auto">7</div>
-                </div>
+                Game board<br> 700px x 500px
             </div>
         </div>
         <hr>

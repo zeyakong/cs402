@@ -71,7 +71,7 @@ router.get('/connectfour/api/v1/sids/:sid', function (req, res, next) {
 
 // create a new game with this sid.
 router.post('/connectfour/api/v1/sids/:sid', function (req, res, next) {
-    sid = req.params.sid;
+    var sid = req.params.sid;
     var theme = new Theme(req.query.color, req.body.playerToken, req.body.computerToken);
     var grid = [
         [" ", " ", " ", " ", " ", " ", " "],
@@ -90,6 +90,20 @@ router.post('/connectfour/api/v1/sids/:sid', function (req, res, next) {
 
 //This endpoint delivers the game associated with the specified SID and having the specified game id.
 router.get('/connectfour/api/v1/sids/:sid/gids/:gid', function (req, res, next) {
+    //find the gameDB for the sid
+    var sid = req.params.sid;
+    if(GameDB[sid]){
+        var gid = req.params.gid;
+        for(var i=0;i<GameDB[sid].length;i++){
+            if(GameDB[sid][i].id ===gid) {
+                res.send(GameDB[sid][i]);
+                return;
+            }
+        }
+        res.send(new Error('invalid gid'));
+    }else{
+        res.send(new Error('invalid sid'));
+    }
 
 });
 
