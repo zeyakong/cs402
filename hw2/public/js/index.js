@@ -1,6 +1,5 @@
 //############ global variables ############
 var sid;
-var gid;
 var metadata;
 
 
@@ -14,12 +13,24 @@ $(document).ready(function () {
     }
 });
 
-function showGameControl() {
+function showGameControl(game) {
 
 }
 
-function showGameBoard() {
 
+
+function showGameBoard(game) {
+    $("#game_board").empty();
+    var str = '<div>';
+    // alert(game.grid[1][2]);
+    for (var i=0;i<game.grid.length;i++) {
+        for(var j =0;j<game.grid[i].length;j++){
+            str = str+'|-'+ game.grid[i][j]+'-';
+        }
+        str =str+'<br>';
+    }
+    str = str +'</div>';
+    $("#game_board").append(str);
 }
 
 function setPage(content) {
@@ -34,6 +45,8 @@ function setPage(content) {
 
 //This function shows the object game by drawing the chess board.
 function showGameDetail(game) {
+    console.log(game);
+    gid = game.id;
     setPage('game');
     showGameControl(game);
     showGameBoard(game)
@@ -44,8 +57,7 @@ function showGameList(data) {
     setPage('main');
     $("#tbody_id").empty();
     for (var i = 0; i < data.length; i++) {
-        console.log(i + "add one row");
-        gid = data[i].id;
+        var gid = data[i].id;
         $("#game_list").append("<tr>\n" +
             "            <td>" + data[i].status + "</td>\n" +
             "            <td><img class='icon avatar' src='/assets/" + data[i].theme.playerToken + ".png'></td>\n" +
@@ -121,7 +133,6 @@ function getGameList() {
         method: 'GET',
         success: function (data) {
             // a list of game objects
-            console.log(data);
             showGameList(data);
         }
     })
@@ -133,7 +144,17 @@ function getGame(gid) {
         url: '/connectfour/api/v1/sids/' + sid + '/gids/' + gid,
         method: 'GET',
         success: function (data) {
-            // a list of game objects
+            showGameDetail(data);
+        }
+    })
+}
+
+function makeAMove(){
+    var move = $('#move_value').val();
+    $.ajax({
+        url: '/connectfour/api/v1/sids/' + sid + '/gids/' + gid+'?move='+move,
+        method: 'POST',
+        success: function (data) {
             showGameDetail(data);
         }
     })
