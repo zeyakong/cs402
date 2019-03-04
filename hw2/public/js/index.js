@@ -28,15 +28,15 @@ function showGameControl(game) {
         }
     }
 }
-
+//show the token picture
 function show(content) {
     $(content).children("img").css('visibility', 'visible');
 }
-
+//hide the token picture
 function hide(content) {
     $(content).children("img").css('visibility', 'hidden');
 }
-
+//move function for game_board click action
 function move(content) {
     var move = $(content).attr("value");
     //validate the move
@@ -84,18 +84,17 @@ function showGameDetail(game) {
 
 //show the list of games in main content in index.html page.
 function showGameList(data) {
-    // console.log(data);
     setPage('main');
     $("#tbody_id").empty();
     for (var i = 0; i < data.length; i++) {
-        $("#game_list").append("<tr>\n" +
-            "            <td>" + data[i].status + "</td>\n" +
-            "            <td><img class='icon avatar' src='" + data[i].theme.playerToken.url + "'></td>\n" +
-            "            <td><img class='icon avatar' src='" + data[i].theme.computerToken.url + "'></td>\n" +
-            "            <td>" + data[i].start + "</td>\n" +
-            "            <td>" + data[i].finish + "</td>\n" +
-            "            <td><button class=\"btn btn-sm\" style='background-color: " + data[i].theme.color + "' onclick='getGame(\"" + data[i].id + "\")'>view</button></td>\n" +
-            "        </tr>");
+        $("#game_list").append("<tr>" +
+            "<td>" + data[i].status + "</td>" +
+            "<td><img class='icon avatar' src='" + data[i].theme.playerToken.url + "'></td>" +
+            "<td><img class='icon avatar' src='" + data[i].theme.computerToken.url + "'></td>" +
+            "<td>" + data[i].start + "</td>" +
+            "<td>" + data[i].finish + "</td>" +
+            "<td><button class=\"btn btn-sm\" style='background-color: " + data[i].theme.color + "' onclick='getGame(\"" + data[i].id + "\")'>view</button></td>" +
+            "</tr>");
     }
 }
 
@@ -185,12 +184,12 @@ function getGame(gid) {
     })
 }
 
+//a post method to make a move by using ajax
 function makeAMove(move) {
     $.ajax({
         url: '/connectfour/api/v1/sids/' + sid + '/gids/' + gameObj.id + '?move=' + move,
         method: 'POST',
         success: function (data) {
-            console.log(data);
             showGameDetail(data);
         }
     })

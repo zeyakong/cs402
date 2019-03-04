@@ -34,14 +34,15 @@ var GameDB = {};
 var tokenList = [];
 
 //################ functions ####################
-function findToken(tokenId){
-    for(var i = 0 ; i<tokenList.length;i++){
-        if(tokenList[i].id ==tokenId){
+function findToken(tokenId) {
+    for (var i = 0; i < tokenList.length; i++) {
+        if (tokenList[i].id == tokenId) {
             return tokenList[i];
         }
     }
     return null;
 }
+
 function findGame(sid, gid) {
     //for loop the game list and compare the game id.
     if (GameDB[sid]) {
@@ -126,7 +127,7 @@ function updateGame(game, move, role) {
             }
         }
     }
-    //check the TIE. the top layer is full.
+    // Finally, check the TIE. the top layer is full.
     var topLayerCount = 0;
     for (i = 0; i < game.grid[0].length; i++) {
         if (game.grid[0][i] != " ") topLayerCount++;
@@ -134,7 +135,6 @@ function updateGame(game, move, role) {
     if (topLayerCount >= 7) {
         game.status = 'TIE';
         game.finish = dateFormat(new Date(), "ddd mmm d yyyy");
-        return;
     }
 }
 
@@ -182,7 +182,7 @@ router.get('/connectfour/api/v1/sids/:sid', function (req, res, next) {
     if (GameDB[sid]) {
         res.send(GameDB[sid]);
     } else {
-        res.status(200).send(new Error("Not found! Check the sid."));
+        res.status(200).send(new Error("invalid sid."));
     }
 });
 
