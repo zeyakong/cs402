@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css?version=1">
+    <title>Game: Connect 4</title>
+</head>
+<body>
+
+<div class="container">
+    <!--login page-->
+    <div id="login_page" style="height: 300px;" class="mt-4">
+        <div class="input-group my-auto">
+            <input type="text" class="form-control" placeholder="username">
+            <input type="password" class="form-control ml-1" placeholder="password">
+            <button class="btn btn-sm btn-primary ml-2">Login</button>
+        </div>
+    </div>
+    <!--This content is the main page-->
+    <div id="main_page">
+        <div class="form-inline mt-5" style="width: 800px;">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Color</label>
+                </div>
+                <input type="color" id="color" class="form-control" style="width: 50px">
+            </div>
+            <div class="input-group ml-1">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Player</label>
+                </div>
+                <select class="custom-select" id="player_token" onchange="updateToken()">
+                </select>
+            </div>
+            <div class="input-group ml-1">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Computer</label>
+                </div>
+                <select class="custom-select" id="computer_token" onchange="updateToken()">
+                </select>
+            </div>
+            <button class="btn btn-primary ml-2" onclick="createNewGame()">CREATE</button>
+        </div>
+        <table class="table table-striped mt-4" id="game_list">
+            <thead>
+            <tr class="table-secondary">
+                <th scope="col">Status</th>
+                <th scope="col">Player</th>
+                <th scope="col">Computer</th>
+                <th scope="col">Time Started</th>
+                <th scope="col">Time Finished</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody id="tbody_id">
+            </tbody>
+        </table>
+    </div>
+    <!--This content is one game detail page-->
+    <div id="game_detail" class="text-center">
+        <button class="btn btn-primary mt-5" style="width: 80%" onclick="getGameList()">Return</button>
+        <div class="text-center mt-4">
+            <div id="game_control" class="form-inline mx-auto"></div>
+            <div id="game_board" class="mx-auto form-inline"></div>
+            <h1 id="game_status" class="mt-3"></h1>
+        </div>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="/js/index.js"></script>
+</body>
+</html>
