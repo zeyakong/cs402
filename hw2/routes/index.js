@@ -5,7 +5,6 @@ var path = require('path');
 var dateFormat = require('dateformat');
 
 //######### variables & constructors ###########
-
 function Token(id, name, url) {
     this.id = id;
     this.name = name;
@@ -18,7 +17,6 @@ function Theme(color, playerToken, computerToken) {
     this.computerToken = computerToken;
 }
 
-
 function Game(theme, id, status, start, finish, grid) {
     this.theme = theme;
     this.id = id;
@@ -28,14 +26,22 @@ function Game(theme, id, status, start, finish, grid) {
     this.grid = grid;
 }
 
-
 function Error(msg) {
     this.msg = msg;
 }
 
 var GameDB = {};
+var tokenList = [];
 
 //################ functions ####################
+function findToken(tokenId){
+    for(var i = 0 ; i<tokenList.length;i++){
+        if(tokenList[i].id ==tokenId){
+            return tokenList[i];
+        }
+    }
+    return null;
+}
 function findGame(sid, gid) {
     //for loop the game list and compare the game id.
     if (GameDB[sid]) {
@@ -87,7 +93,6 @@ function updateGame(game, move, role) {
             }
         }
     }
-
     //check each col, i>=2 will cause index out of range exception
     for (i = 0; i < 2; i++) {
         for (j = 0; j < game.grid[i].length; j++) {
@@ -99,7 +104,6 @@ function updateGame(game, move, role) {
             }
         }
     }
-
     //check the diagonal. 1) left-up to right-down diagonal
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 4; j++) {
@@ -132,7 +136,6 @@ function updateGame(game, move, role) {
         game.finish = dateFormat(new Date(), "ddd mmm d yyyy");
         return;
     }
-
 }
 
 /**
@@ -156,7 +159,16 @@ router.get('/connectfour/api/v1/sids', function (req, res, next) {
 
 //get a meta object from the response
 router.get('/connectfour/api/v1/meta', function (req, res, next) {
-    var tokenList = [new Token("t1", "android", "url t1"), new Token("2", "chrome", "url t2")];
+    //init token list
+    tokenList = [
+        new Token(uuid.v4(), "android", "/assets/android.png"),
+        new Token(uuid.v4(), "chrome", "/assets/chrome.png"),
+        new Token(uuid.v4(), "windows", "/assets/windows.png"),
+        new Token(uuid.v4(), "linux", "/assets/linux.png"),
+        new Token(uuid.v4(), "explorer", "/assets/explorer.png"),
+        new Token(uuid.v4(), "mozilla", "/assets/mozilla.png"),
+        new Token(uuid.v4(), "opera", "/assets/opera.png")
+    ];
     var metadata = {
         default: new Theme("#ff0000", tokenList[0], tokenList[1]),
         tokens: tokenList
@@ -177,7 +189,7 @@ router.get('/connectfour/api/v1/sids/:sid', function (req, res, next) {
 // create a new game with this sid.
 router.post('/connectfour/api/v1/sids/:sid', function (req, res, next) {
     var sid = req.params.sid;
-    var theme = new Theme(req.query.color, req.body.playerToken, req.body.computerToken);
+    var theme = new Theme(req.query.color, findToken(req.body.playerTokenId), findToken(req.body.computerTokenId));
     var grid = [
         [" ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " ", " "],

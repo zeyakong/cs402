@@ -7,7 +7,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?version=1">
     <title>Game: Connect 4</title>
 </head>
 <body>
@@ -27,13 +27,6 @@
                     <label class="input-group-text">Player</label>
                 </div>
                 <select class="custom-select" id="player_token" onchange="updateToken()">
-                    <option value="chrome">chrome</option>
-                    <option value="windows">windows</option>
-                    <option value="linux">linux</option>
-                    <option value="explorer">explorer</option>
-                    <option value="mozilla">mozilla</option>
-                    <option value="android">android</option>
-                    <option value="opera">opera</option>
                 </select>
             </div>
             <div class="input-group ml-1">
@@ -41,13 +34,6 @@
                     <label class="input-group-text">Computer</label>
                 </div>
                 <select class="custom-select" id="computer_token" onchange="updateToken()">
-                    <option value="chrome">chrome</option>
-                    <option value="windows">windows</option>
-                    <option value="linux">linux</option>
-                    <option value="explorer">explorer</option>
-                    <option value="mozilla">mozilla</option>
-                    <option value="android">android</option>
-                    <option value="opera">opera</option>
                 </select>
             </div>
             <button class="btn btn-primary ml-2" onclick="createNewGame()">CREATE</button>
@@ -66,32 +52,14 @@
             <tbody id="tbody_id">
             </tbody>
         </table>
-        <button class="btn btn-sm" onclick="showGameContent()">show game</button>
     </div>
     <!--This content is one game detail page-->
     <div id="game_detail" class="text-center">
         <button class="btn btn-primary mt-5" style="width: 80%" onclick="getGameList()">Return</button>
         <div class="text-center mt-4">
-            <div id="game_control" class="mx-auto">
-                Game control<br> 700px x 100px
-                <br>
-                <select id="move_value">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                </select>
-                <button onclick="makeAMove()">Go</button>
-                <!--<img class="mt-4" style="height: 100px; width: 700px;" src="assets/winner.gif">-->
-            </div>
-            <div id="game_board" class="mx-auto" style="width: 700px;height:500px;">
-                Game board<br> 700px x 500px
-            </div>
+            <div id="game_control" class="form-inline mx-auto"></div>
+            <div id="game_board" class="mx-auto form-inline"></div>
         </div>
-        <hr>
     </div>
 </div>
 

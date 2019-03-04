@@ -6,22 +6,44 @@ body, html {
     /*height: 40px;*/
     /*width: 40px;*/
     border-radius: 50%;
-    border:1px solid #021a40;
+    border: 1px solid #021a40;
 }
 
-.avatar{
+.avatar {
     height: 40px;
     width: 40px;
 }
 
-#game_control{
+#game_control {
     height: 100px;
-    width:700px;
-    background-color: antiquewhite;
+    width: 700px;
 }
 
-#game_board{
+#game_board {
     height: 500px;
-    width:700px;
-    background-color: aquamarine;
+    width: 700px;
+}
+
+.gameStatusPic {
+    height: 100px;
+    width: 700px;
+    border: 5px inset;
+}
+
+.tokenSlot {
+    height: 100px;
+    width: 100px;
+}
+
+.customHide{
+    visibility: hidden;
+}
+
+.tokenImg{
+    margin: 10px 10px 10px 10px;
+    height: 80px;
+    width: 80px;
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid #021a40;
 }
