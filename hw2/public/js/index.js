@@ -48,6 +48,7 @@ function move(content) {
 }
 
 function showGameBoard(game) {
+    $("#game_status").text(game.status);
     var gameBoard = $("#game_board").empty();
     gameBoard.css('background-color', game.theme.color);
     for (var i = 0; i < game.grid.length; i++) {
