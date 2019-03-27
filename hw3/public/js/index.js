@@ -8,19 +8,23 @@ var csrfToken;
 //init function
 $(document).ready(function () {
     loadMetadata();
-    setPage('login');
     //check the localStorage.
-
-
+    let storedUserId = localStorage.getItem('userId');
+    let storedCSRF = localStorage.getItem('csrfToken');
+    if(storedCSRF && storedUserId){
+        // already logged in
+        uid = storedUserId;
+        csrfToken = storedCSRF;
+        getGameList();
+    }else{
+        setPage('login');
+    }
     $("#login_form").submit((e)=>{
         //prevent Default functionality
         e.preventDefault();
         login();
     });
 });
-
-
-
 
 function showGameControl(game) {
     var gameControl = $("#game_control");
@@ -236,6 +240,9 @@ function login() {
             if(data){
                 uid = data._id;
                 csrfToken = request.getResponseHeader('X-CSRF');
+                //store it into localStorage
+                localStorage.setItem('userId',data._id);
+                localStorage.setItem('csrfToken',csrfToken);
                 getGameList();
             }else{
                 alert('Server inner error! the user object is null');
@@ -259,6 +266,7 @@ function logout() {
             gameObj = null;
             uid = null;
             csrfToken = null;
+            localStorage.clear();
         }
     })
 }

@@ -150,6 +150,8 @@ function getRandomInteger(min, max) {
 
 
 //################ database related function #############
+//this function is testing only. It will generate defaults configuration.
+//the server won't execute it when it is running.
 function initialDB() {
     //first initial metadata
     let tokens = [
@@ -405,7 +407,7 @@ router.put('/connect4/api/v2/users/:userid/default', function (req, res, next) {
     let defaults = req.body.defaults;
     if (defaults && uid) {
         //change the default.
-        db.collection('users').updateOne({_id: uid}, {$set: {default: defaults}}, (err, result) => {
+        db.collection('users').updateOne({_id: ObjectId(uid)}, {$set: {default: defaults}}, (err, result) => {
             if (err) throw err;
             res.status(200).send(defaults);
         });
