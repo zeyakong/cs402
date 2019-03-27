@@ -2,32 +2,25 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var MongoClient = require('mongodb').MongoClient
-    , assert = require('assert');
-
-// Connection URL
-var url = 'mongodb://localhost:27017/hw3';
-
-MongoClient.connect(url, function(err, db) {
-    assert.equal(null, err);
-    console.log("Connected successfully to server");
-    db.close();
-});
-
+var session = require('express-session');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 var app = express();
 
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('trust proxy', 1);// trust first proxy
+app.use(session({
+        secret: 'PHP is the best language in the world, others are trash! PHP是最牛逼的语言.PHP - самый мощный язык.PHPは最も強力な言語です.',
+        cookie: {maxAge: 60000}
+    })
+);
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 module.exports = app;

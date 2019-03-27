@@ -7,11 +7,17 @@ var gameObj;
 //init function
 $(document).ready(function () {
     loadMetadata();
-    setPage('main');
+    setPage('login');
     if (!sid) {
         getSID();
     }
+    $("#login_form").submit((e)=>{
+        //prevent Default functionality
+        e.preventDefault();
+        login();
+    });
 });
+
 
 function showGameControl(game) {
     var gameControl = $("#game_control");
@@ -28,14 +34,17 @@ function showGameControl(game) {
         }
     }
 }
+
 //show the token picture
 function show(content) {
     $(content).children("img").css('visibility', 'visible');
 }
+
 //hide the token picture
 function hide(content) {
     $(content).children("img").css('visibility', 'hidden');
 }
+
 //move function for game_board click action
 function move(content) {
     var move = $(content).attr("value");
@@ -68,9 +77,15 @@ function setPage(content) {
     if (content === 'game') {
         $("#main_page").hide();
         $("#game_detail").show();
+        $("#login_page").hide();
     } else if (content === 'main') {
         $("#main_page").show();
         $("#game_detail").hide();
+        $("#login_page").hide();
+    } else {
+        $("#main_page").hide();
+        $("#game_detail").hide();
+        $("#login_page").show();
     }
 }
 
@@ -118,7 +133,7 @@ function createNewGame() {
     var computerTokenId = $("#computer_token").val();
     $.ajax({
         //colorValue is a special value start with #.So, must encoded
-        url: '/connectfour/api/v1/sids/' + sid + '?color=' + encodeURIComponent(colorValue),
+        url: '/connectfour/api/v2/sids/' + sid + '?color=' + encodeURIComponent(colorValue),
         method: 'POST',
         data: {
             "playerTokenId": playerTokenId,
@@ -134,7 +149,7 @@ function createNewGame() {
 
 function loadMetadata() {
     $.ajax({
-        url: '/connectfour/api/v1/meta',
+        url: '/connectfour/api/v2/meta',
         method: 'GET',
         success: function (data) {
             metadata = data;
@@ -154,7 +169,7 @@ function loadMetadata() {
 
 function getSID() {
     $.ajax({
-        url: '/connectfour/api/v1/sids',
+        url: '/connectfour/api/v2/sids',
         method: 'GET',
         success: function (data, textStatus, request) {
             sid = request.getResponseHeader('X-sid');
@@ -164,7 +179,7 @@ function getSID() {
 
 function getGameList() {
     $.ajax({
-        url: '/connectfour/api/v1/sids/' + sid,
+        url: '/connectfour/api/v2/sids/' + sid,
         method: 'GET',
         success: function (data) {
             // a list of game objects
@@ -176,7 +191,7 @@ function getGameList() {
 //use sid and gid to get the current game object by using ajax.
 function getGame(gid) {
     $.ajax({
-        url: '/connectfour/api/v1/sids/' + sid + '/gids/' + gid,
+        url: '/connectfour/api/v2/sids/' + sid + '/gids/' + gid,
         method: 'GET',
         success: function (data) {
             showGameDetail(data);
@@ -187,10 +202,41 @@ function getGame(gid) {
 //a post method to make a move by using ajax
 function makeAMove(move) {
     $.ajax({
-        url: '/connectfour/api/v1/sids/' + sid + '/gids/' + gameObj.id + '?move=' + move,
+        url: '/connectfour/api/v2/sids/' + sid + '/gids/' + gameObj.id + '?move=' + move,
         method: 'POST',
         success: function (data) {
             showGameDetail(data);
+        }
+    })
+}
+
+function hideLoginMsg() {
+    $("#login_msg").text("");
+}
+
+
+function login() {
+    let email = $("#email").val();
+    let password = $("#password").val();
+    $.ajax({
+        url: '/connect4/api/v2/login',
+        method: 'POST',
+        data: {
+            'email': email,
+            'password': password,
+        },
+        contentType: 'application/x-www-form-urlencoded',
+        success: (data) => {
+            // correct inputs
+            if(data){
+                setPage('main');
+            }else{
+                alert('Server inner error! the user object is null');
+            }
+        },
+        error:(data)=>{
+            //invalid inputs
+            $("#login_msg").text(data.responseJSON.msg);
         }
     })
 }
