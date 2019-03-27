@@ -201,12 +201,12 @@ function initialDB() {
 
 //################ routers ######################
 //return the whole html index file( the whole app)
-router.get('/connectfour', function (req, res, next) {
+router.get('/connect4', function (req, res, next) {
     res.sendFile(path.join(__dirname + '/../public/index.html'));
 });
 
 //get a meta object from the response
-router.get('/connectfour/api/v2/meta', function (req, res, next) {
+router.get('/connect4/api/v2/meta', function (req, res, next) {
     //init token list
    findMetadata((data)=>{
        res.send(data);
@@ -218,22 +218,21 @@ router.get('/connectfour/api/v2/meta', function (req, res, next) {
  * if the user is valid(sid csrf uid) it will go next.
  * Otherwise, send 403 back.
  */
-router.all('/connect4/api/v2/users/*', (req, res, next) => {
+router.all(['/connect4/api/v2/users/:uid/*','/connect4/api/v2/users/:uid'], (req, res, next) => {
     // authenticate users
     let pathUid = req.params.uid;
     let sessionUser = req.session.user;
     let sessionCsrfToken = req.session.csrfToken;
     let reqCsrfToken = req.get('X-CSRF');
-
     if (reqCsrfToken && sessionCsrfToken && sessionUser && pathUid) {
         // verify the csrfToken
         if (reqCsrfToken === sessionCsrfToken) {
             //verify the user
-            db.collection('users').findOne({_id: pathUid}, (err, user) => {
+            db.collection('users').findOne({_id: ObjectId(pathUid)}, (err, user) => {
                 if (user && sessionUser && pathUid === sessionUser._id) {
                     next();
                 } else {
-                    res.status(403).send(new Error('incorrect authentication.'));
+                    res.status(403).send(new Error('the request is not authentication.'));
                 }
             })
         } else {
@@ -245,7 +244,7 @@ router.all('/connect4/api/v2/users/*', (req, res, next) => {
 });
 
 // get the list of all the games.
-router.get('/connectfour/api/v2/users/:uid', function (req, res, next) {
+router.get('/connect4/api/v2/users/:uid', function (req, res, next) {
     let uid = req.params.uid;
     // the uid was already validated by previous routers.
     // search the games collection and return the result.
@@ -256,7 +255,7 @@ router.get('/connectfour/api/v2/users/:uid', function (req, res, next) {
 });
 
 // create a new game with this uid.
-router.post('/connectfour/api/v2/users/:uid', function (req, res, next) {
+router.post('/connect4/api/v2/users/:uid', function (req, res, next) {
     let uid = req.params.uid;
     //find tokens
     findToken(req.body.playerTokenId,(playerToken)=>{
@@ -280,7 +279,7 @@ router.post('/connectfour/api/v2/users/:uid', function (req, res, next) {
 });
 
 //This endpoint delivers the game associated with the specified uid and having the specified game id.
-router.get('/connectfour/api/v2/users/:uid/gids/:gid', function (req, res, next) {
+router.get('/connect4/api/v2/users/:uid/gids/:gid', function (req, res, next) {
     //find the gameDB for the sid
     let uid = req.params.uid;
     let gid = req.params.gid;
@@ -292,7 +291,7 @@ router.get('/connectfour/api/v2/users/:uid/gids/:gid', function (req, res, next)
 });
 
 //get the game object by this move. move is a query param
-router.post('/connectfour/api/v2/users/:uid/gids/:gid', function (req, res, next) {
+router.post('/connect4/api/v2/users/:uid/gids/:gid', function (req, res, next) {
     let uid = req.params.uid;
     let gid = req.params.gid;
     let move = parseInt(req.query.move);
@@ -324,7 +323,6 @@ router.post('/connectfour/api/v2/users/:uid/gids/:gid', function (req, res, next
                     //update the game
                     db.collection('games').update({_id: new ObjectId(gid),userId:uid},{$set : game},(err,result)=>{
                         if(err) throw err;
-                        console.log(result);
                         res.send(game);
                     });
                 }
@@ -392,7 +390,7 @@ router.post('/connect4/api/v2/login', function (req, res, next) {
                 res.setHeader('X-CSRF', csrfToken);
                 res.status(200).send(user);
             } else {
-                res.status(403).send(new Error('incorrect email or password!'));
+                res.status(403).send(new Error('incorrect email or password'));
             }
         });
     } else {
@@ -401,16 +399,14 @@ router.post('/connect4/api/v2/login', function (req, res, next) {
 });
 
 router.post('/connect4/api/v2/logout', function (req, res, next) {
+    console.log('come logout');
     // invalid the session
     if (req.session) {
-        req.session.destroy(function (err) {
-            // cannot access session here
-            if (err) throw err;
-            res.status(200);
-        })
+        req.session.destroy();
+        res.status(200).send();
     } else {
         //session doesn't exist.
-        res.status(400);
+        res.status(400).send();
     }
 });
 

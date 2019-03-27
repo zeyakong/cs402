@@ -9,6 +9,8 @@ var csrfToken;
 $(document).ready(function () {
     loadMetadata();
     setPage('login');
+    //check the localStorage.
+
 
     $("#login_form").submit((e)=>{
         //prevent Default functionality
@@ -16,6 +18,8 @@ $(document).ready(function () {
         login();
     });
 });
+
+
 
 
 function showGameControl(game) {
@@ -90,7 +94,6 @@ function setPage(content) {
 
 //This function shows the object game by drawing the chess board.
 function showGameDetail(game) {
-    console.log(game);
     setPage('game');
     gameObj = game;
     showGameControl(game);
@@ -133,11 +136,14 @@ function createNewGame() {
     var computerTokenId = $("#computer_token").val();
     $.ajax({
         //colorValue is a special value start with #.So, must encoded
-        url: '/connectfour/api/v2/users/' + uid + '?color=' + encodeURIComponent(colorValue),
+        url: '/connect4/api/v2/users/' + uid + '?color=' + encodeURIComponent(colorValue),
         method: 'POST',
         data: {
             "playerTokenId": playerTokenId,
             "computerTokenId": computerTokenId
+        },
+        headers:{
+            'X-CSRF':csrfToken
         },
         dataType: 'json',
         success: function (data) {
@@ -149,7 +155,7 @@ function createNewGame() {
 
 function loadMetadata() {
     $.ajax({
-        url: '/connectfour/api/v2/meta',
+        url: '/connect4/api/v2/meta',
         method: 'GET',
         success: function (data) {
             metadata = data;
@@ -169,8 +175,11 @@ function loadMetadata() {
 
 function getGameList() {
     $.ajax({
-        url: '/connectfour/api/v2/users/' + uid,
+        url: '/connect4/api/v2/users/' + uid,
         method: 'GET',
+        headers:{
+            'X-CSRF':csrfToken
+        },
         success: function (data) {
             // a list of game objects
             showGameList(data);
@@ -181,8 +190,11 @@ function getGameList() {
 //use sid and gid to get the current game object by using ajax.
 function getGame(gid) {
     $.ajax({
-        url: '/connectfour/api/v2/users/' + uid + '/gids/' + gid,
+        url: '/connect4/api/v2/users/' + uid + '/gids/' + gid,
         method: 'GET',
+        headers:{
+            'X-CSRF':csrfToken
+        },
         success: function (data) {
             showGameDetail(data);
         }
@@ -192,8 +204,11 @@ function getGame(gid) {
 //a post method to make a move by using ajax
 function makeAMove(move) {
     $.ajax({
-        url: '/connectfour/api/v2/users/' + uid + '/gids/' + gameObj._id + '?move=' + move,
+        url: '/connect4/api/v2/users/' + uid + '/gids/' + gameObj._id + '?move=' + move,
         method: 'POST',
+        headers:{
+            'X-CSRF':csrfToken
+        },
         success: function (data) {
             showGameDetail(data);
         }
@@ -220,8 +235,8 @@ function login() {
             // correct inputs
             if(data){
                 uid = data._id;
-                alert(request.getResponseHeader('X-CSRF'));
-                setPage('main');
+                csrfToken = request.getResponseHeader('X-CSRF');
+                getGameList();
             }else{
                 alert('Server inner error! the user object is null');
             }
@@ -229,6 +244,21 @@ function login() {
         error:(data)=>{
             //invalid inputs
             $("#login_msg").text(data.responseJSON.msg);
+        }
+    })
+}
+
+function logout() {
+    $.ajax({
+        url: '/connect4/api/v2/logout',
+        method: 'POST',
+        success: function (data) {
+            //go login page
+            setPage('login');
+            //delete all variables/ empty local storage.
+            gameObj = null;
+            uid = null;
+            csrfToken = null;
         }
     })
 }

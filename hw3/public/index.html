@@ -32,29 +32,40 @@
     </div>
     <!--This content is the main page-->
     <div id="main_page">
-        <div class="form-inline mt-5" style="width: 800px;">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <label class="input-group-text">Color</label>
+        <div class="row mt-5">
+            <div class="col-7">
+                <div class="form-inline" style="width: 100%">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">Color</label>
+                        </div>
+                        <input type="color" id="color" class="form-control" style="width: 50px">
+                    </div>
+                    <div class="input-group ml-1">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">Player</label>
+                        </div>
+                        <select class="custom-select" id="player_token" onchange="updateToken()">
+                        </select>
+                    </div>
+                    <div class="input-group ml-1">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">Computer</label>
+                        </div>
+                        <select class="custom-select" id="computer_token" onchange="updateToken()">
+                        </select>
+                    </div>
+                    <button class="btn btn-primary ml-2" onclick="createNewGame()">CREATE</button>
                 </div>
-                <input type="color" id="color" class="form-control" style="width: 50px">
             </div>
-            <div class="input-group ml-1">
-                <div class="input-group-prepend">
-                    <label class="input-group-text">Player</label>
+            <div class="col">
+                <div class="text-right">
+                    <span>Hello: sasx</span>
+                    <button class="btn btn-danger ml-2" onclick="logout()">Logout</button>
                 </div>
-                <select class="custom-select" id="player_token" onchange="updateToken()">
-                </select>
             </div>
-            <div class="input-group ml-1">
-                <div class="input-group-prepend">
-                    <label class="input-group-text">Computer</label>
-                </div>
-                <select class="custom-select" id="computer_token" onchange="updateToken()">
-                </select>
-            </div>
-            <button class="btn btn-primary ml-2" onclick="createNewGame()">CREATE</button>
         </div>
+
         <table class="table table-striped mt-4" id="game_list">
             <thead>
             <tr class="table-secondary">
