@@ -38,10 +38,7 @@ function Error(msg) {
     this.msg = msg;
 }
 
-var GameDB = {};
-
 //################ functions ####################
-
 let findMetadata = (callback) => {
     db.collection('metadata').find({}).toArray((err, docs) => {
         if (err) throw err;
@@ -62,19 +59,6 @@ function findToken(tokenId,callback) {
     })
 }
 
-function findGame(sid, gid) {
-    //for loop the game list and compare the game id.
-    if (GameDB[sid]) {
-        for (var i = 0; i < GameDB[sid].length; i++) {
-            if (GameDB[sid][i].id === gid) {
-                return GameDB[sid][i];
-            }
-        }
-        return null;
-    } else {
-        return null;
-    }
-}
 
 /*
 this function checks the move action is valid or not
@@ -429,34 +413,5 @@ router.put('/connect4/api/v2/users/:userid/default', function (req, res, next) {
         res.status(200).send(new Error('invalid defaults'));
     }
 });
-
-router.get('/connect4/api/v2/session', function (req, res, next) {
-    if (req.session.views) {
-        req.session.views++
-        res.setHeader('Content-Type', 'text/html')
-        res.write('<p>views: ' + req.session.views + '</p>')
-        res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
-        res.end()
-    } else {
-        req.session.views = 1
-        res.end('welcome to the session demo. refresh!')
-    }
-});
-
-// ############## testing only #################
-// router.all('/connect4/api/v2/test/:id', function (req, res, next) {
-//     console.log("call the all * router");
-//     next();
-// });
-//
-// router.get('/connect4/api/v2/test/:id', function (req, res, next) {
-//     console.log("call the /:id");
-//     res.send('ok');
-// });
-//
-// router.get('/connect4/api/v2/test/:id/2', function (req, res, next) {
-//     console.log("call the /:id/2");
-//     res.send('ok');
-// });
 
 module.exports = router;
