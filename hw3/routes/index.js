@@ -4,6 +4,7 @@ var router = express.Router();
 var db = require('./database.js');
 var path = require('path');
 var dateFormat = require('dateformat');
+let ObjectId = require('mongodb').ObjectID;
 
 //######### variables & constructors ###########
 function Token(id, name, url) {
@@ -18,13 +19,13 @@ function Theme(color, playerToken, computerToken) {
     this.computerToken = computerToken;
 }
 
-function Game(theme, status, start, finish, grid, userid) {
+function Game(theme, status, start, finish, grid, userId) {
     this.theme = theme;
     this.status = status;
     this.start = start;
     this.finish = finish;
     this.grid = grid;
-    this.userid = userid;
+    this.userId = userId;
 }
 
 function User(email, password, defaultTheme) {
@@ -38,17 +39,27 @@ function Error(msg) {
 }
 
 var GameDB = {};
-var tokenList = [];
-var metadata;
 
 //################ functions ####################
-function findToken(tokenId) {
-    for (var i = 0; i < tokenList.length; i++) {
-        if (tokenList[i].id == tokenId) {
-            return tokenList[i];
+
+let findMetadata = (callback) => {
+    db.collection('metadata').find({}).toArray((err, docs) => {
+        if (err) throw err;
+        callback(docs[0]);
+    });
+};
+
+function findToken(tokenId,callback) {
+    findMetadata((data)=>{
+        let result=null;
+        let tokenList = data.tokens;
+        for (let i = 0; i < tokenList.length; i++) {
+            if (tokenList[i].id === tokenId) {
+                result = tokenList[i];
+            }
         }
-    }
-    return null;
+        callback(result);
+    })
 }
 
 function findGame(sid, gid) {
@@ -95,10 +106,10 @@ function updateGame(game, move, role) {
         // if j >= 4 (index out of range)
         for (var j = 0; j < 4; j++) {
             tokenType = game.grid[i][j];
-            if (tokenType == " ") continue;
-            if (game.grid[i][j + 1] == tokenType && game.grid[i][j + 2] == tokenType && game.grid[i][j + 3] == tokenType) {
+            if (tokenType === " ") continue;
+            if (game.grid[i][j + 1] === tokenType && game.grid[i][j + 2] === tokenType && game.grid[i][j + 3] === tokenType) {
                 game.finish = dateFormat(new Date(), "ddd mmm d yyyy");
-                tokenType == 'X' ? game.status = 'VICTORY' : game.status = 'LOSS';
+                tokenType === 'X' ? game.status = 'VICTORY' : game.status = 'LOSS';
             }
         }
     }
@@ -106,10 +117,10 @@ function updateGame(game, move, role) {
     for (i = 0; i < 2; i++) {
         for (j = 0; j < game.grid[i].length; j++) {
             tokenType = game.grid[i][j];
-            if (tokenType == " ") continue;
-            if (game.grid[i + 1][j] == tokenType && game.grid[i + 2][j] == tokenType && game.grid[i + 3][j] == tokenType) {
+            if (tokenType === " ") continue;
+            if (game.grid[i + 1][j] === tokenType && game.grid[i + 2][j] === tokenType && game.grid[i + 3][j] === tokenType) {
                 game.finish = dateFormat(new Date(), "ddd mmm d yyyy");
-                tokenType == 'X' ? game.status = 'VICTORY' : game.status = 'LOSS';
+                tokenType === 'X' ? game.status = 'VICTORY' : game.status = 'LOSS';
             }
         }
     }
@@ -117,10 +128,10 @@ function updateGame(game, move, role) {
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 4; j++) {
             tokenType = game.grid[i][j];
-            if (tokenType == " ") continue;
-            if (game.grid[i + 1][j + 1] == tokenType && game.grid[i + 2][j + 2] == tokenType && game.grid[i + 3][j + 3] == tokenType) {
+            if (tokenType === " ") continue;
+            if (game.grid[i + 1][j + 1] === tokenType && game.grid[i + 2][j + 2] === tokenType && game.grid[i + 3][j + 3] === tokenType) {
                 game.finish = dateFormat(new Date(), "ddd mmm d yyyy");
-                tokenType == 'X' ? game.status = 'VICTORY' : game.status = 'LOSS';
+                tokenType === 'X' ? game.status = 'VICTORY' : game.status = 'LOSS';
             }
         }
     }
@@ -128,17 +139,17 @@ function updateGame(game, move, role) {
     for (i = 0; i < 2; i++) {
         for (j = 3; j < 7; j++) {
             tokenType = game.grid[i][j];
-            if (tokenType == " ") continue;
-            if (game.grid[i + 1][j - 1] == tokenType && game.grid[i + 2][j - 2] == tokenType && game.grid[i + 3][j - 3] == tokenType) {
+            if (tokenType === " ") continue;
+            if (game.grid[i + 1][j - 1] === tokenType && game.grid[i + 2][j - 2] === tokenType && game.grid[i + 3][j - 3] === tokenType) {
                 game.finish = dateFormat(new Date(), "ddd mmm d yyyy");
-                tokenType == 'X' ? game.status = 'VICTORY' : game.status = 'LOSS';
+                tokenType === 'X' ? game.status = 'VICTORY' : game.status = 'LOSS';
             }
         }
     }
     // Finally, check the TIE. the top layer is full.
     var topLayerCount = 0;
     for (i = 0; i < game.grid[0].length; i++) {
-        if (game.grid[0][i] != " ") topLayerCount++;
+        if (game.grid[0][i] !== " ") topLayerCount++;
     }
     if (topLayerCount >= 7) {
         game.status = 'TIE';
@@ -197,11 +208,9 @@ router.get('/connectfour', function (req, res, next) {
 //get a meta object from the response
 router.get('/connectfour/api/v2/meta', function (req, res, next) {
     //init token list
-    db.collection('metadata').find({}).toArray((err, docs) => {
-        if (err) throw err;
-        metadata = docs[0];
-        res.send(metadata);
-    });
+   findMetadata((data)=>{
+       res.send(data);
+   })
 });
 
 /**
@@ -209,16 +218,16 @@ router.get('/connectfour/api/v2/meta', function (req, res, next) {
  * if the user is valid(sid csrf uid) it will go next.
  * Otherwise, send 403 back.
  */
-router.all('/connect4/api/v2/users/:uid', (req, res, next) => {
+router.all('/connect4/api/v2/users/*', (req, res, next) => {
     // authenticate users
     let pathUid = req.params.uid;
     let sessionUser = req.session.user;
     let sessionCsrfToken = req.session.csrfToken;
     let reqCsrfToken = req.get('X-CSRF');
 
-    if(reqCsrfToken && sessionCsrfToken &&sessionUser && pathUid){
+    if (reqCsrfToken && sessionCsrfToken && sessionUser && pathUid) {
         // verify the csrfToken
-        if(reqCsrfToken === sessionCsrfToken){
+        if (reqCsrfToken === sessionCsrfToken) {
             //verify the user
             db.collection('users').findOne({_id: pathUid}, (err, user) => {
                 if (user && sessionUser && pathUid === sessionUser._id) {
@@ -227,10 +236,10 @@ router.all('/connect4/api/v2/users/:uid', (req, res, next) => {
                     res.status(403).send(new Error('incorrect authentication.'));
                 }
             })
-        }else{
+        } else {
             res.status(403).send(new Error('the request is not authenticated.'))
         }
-    }else{
+    } else {
         res.status(403).send(new Error('the request is not authenticated.'))
     }
 });
@@ -240,8 +249,8 @@ router.get('/connectfour/api/v2/users/:uid', function (req, res, next) {
     let uid = req.params.uid;
     // the uid was already validated by previous routers.
     // search the games collection and return the result.
-    db.collection('games').find({userId:uid}).toArray((err,games)=>{
-        if(err) throw err;
+    db.collection('games').find({userId: uid}).toArray((err, games) => {
+        if (err) throw err;
         res.send(games);
     });
 });
@@ -249,30 +258,35 @@ router.get('/connectfour/api/v2/users/:uid', function (req, res, next) {
 // create a new game with this uid.
 router.post('/connectfour/api/v2/users/:uid', function (req, res, next) {
     let uid = req.params.uid;
-    let theme = new Theme(req.query.color, findToken(req.body.playerTokenId), findToken(req.body.computerTokenId));
-    let grid = [
-        [" ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " "]
-    ];
-    let game = new Game(theme, "UNFINISHED", dateFormat(new Date(), "ddd mmm d yyyy"), "", grid,uid);
-    //store it into database
-    db.collection('games').insertOne(game,(err,result)=>{
-        if(err) throw err;
-        res.send(result);
+    //find tokens
+    findToken(req.body.playerTokenId,(playerToken)=>{
+        findToken(req.body.computerTokenId,(computerToken)=>{
+            let theme = new Theme(req.query.color,playerToken, computerToken);
+            let grid = [
+                [" ", " ", " ", " ", " ", " ", " "],
+                [" ", " ", " ", " ", " ", " ", " "],
+                [" ", " ", " ", " ", " ", " ", " "],
+                [" ", " ", " ", " ", " ", " ", " "],
+                [" ", " ", " ", " ", " ", " ", " "]
+            ];
+            let game = new Game(theme, "UNFINISHED", dateFormat(new Date(), "ddd mmm d yyyy"), "", grid, uid);
+            //store it into database
+            db.collection('games').insertOne(game, (err, result) => {
+                if (err) throw err;
+                res.send(result.ops[0]);
+            });
+        })
     });
 });
 
-//This endpoint delivers the game associated with the specified SID and having the specified game id.
+//This endpoint delivers the game associated with the specified uid and having the specified game id.
 router.get('/connectfour/api/v2/users/:uid/gids/:gid', function (req, res, next) {
     //find the gameDB for the sid
     let uid = req.params.uid;
     let gid = req.params.gid;
     //find game from db
-    db.collection('games').findOne({userId: uid,_id:gid},(err,result)=>{
-        if(err) throw err;
+    db.collection('games').findOne({_id: new ObjectId(gid),userId:uid}, (err, result) => {
+        if (err) throw err;
         res.send(result);
     });
 });
@@ -282,8 +296,8 @@ router.post('/connectfour/api/v2/users/:uid/gids/:gid', function (req, res, next
     let uid = req.params.uid;
     let gid = req.params.gid;
     let move = parseInt(req.query.move);
-    db.collection('games').findOne({userId: uid,_id:gid},(err,game)=>{
-        if(err) throw err;
+    db.collection('games').findOne({_id: new ObjectId(gid),userId:uid}, (err, game) => {
+        if (err) throw err;
         if (game) {
             if (game.status === 'UNFINISHED') {
                 //player's move
@@ -294,7 +308,11 @@ router.post('/connectfour/api/v2/users/:uid/gids/:gid', function (req, res, next
                     res.send(new Error('invalid player move'));
                 }
                 if (game.status !== 'UNFINISHED') {
-                    res.send(game);
+                    //update the game
+                    db.collection('games').update({_id: new ObjectId(gid),userId:uid},{$set : game},(err,result)=>{
+                        if(err) throw err;
+                        res.send(game);
+                    });
                 }
                 else {
                     //if the game does not finish, computer will choose a move
@@ -303,13 +321,18 @@ router.post('/connectfour/api/v2/users/:uid/gids/:gid', function (req, res, next
                         move = getRandomInteger(0, 6);
                     }
                     updateGame(game, move, "computer");
-                    res.send(game);
+                    //update the game
+                    db.collection('games').update({_id: new ObjectId(gid),userId:uid},{$set : game},(err,result)=>{
+                        if(err) throw err;
+                        console.log(result);
+                        res.send(game);
+                    });
                 }
             } else {
                 res.send(new Error('The game is over.'))
             }
         } else {
-            res.send(new Error('invalid sid or gid'));
+            res.send(new Error('invalid uid or gid'));
         }
     });
 
@@ -402,8 +425,8 @@ router.put('/connect4/api/v2/users/:userid/default', function (req, res, next) {
     let defaults = req.body.defaults;
     if (defaults && uid) {
         //change the default.
-        db.collection('users').updateOne({_id: uid},{$set: {default: defaults}},(err,result)=>{
-            if(err) throw err;
+        db.collection('users').updateOne({_id: uid}, {$set: {default: defaults}}, (err, result) => {
+            if (err) throw err;
             res.status(200).send(defaults);
         });
     } else {

@@ -1,16 +1,15 @@
 //############ global variables ############
-var sid;
+var uid;
 var metadata;
 var gameObj;
+var csrfToken;
 
 // ############ functions ##############
 //init function
 $(document).ready(function () {
     loadMetadata();
     setPage('login');
-    if (!sid) {
-        getSID();
-    }
+
     $("#login_form").submit((e)=>{
         //prevent Default functionality
         e.preventDefault();
@@ -22,11 +21,11 @@ $(document).ready(function () {
 function showGameControl(game) {
     var gameControl = $("#game_control");
     gameControl.empty();
-    if (game.status == "LOSS") {
+    if (game.status === "LOSS") {
         gameControl.append("<img src='/assets/cry.gif' class='gameStatusPic'>");
-    } else if (game.status == "VICTORY") {
+    } else if (game.status === "VICTORY") {
         gameControl.append("<img src='/assets/winner.gif' class='gameStatusPic'>");
-    } else if (game.status == "TIE") {
+    } else if (game.status === "TIE") {
         gameControl.append("<div class='gameStatusPic'><h1 class='mt-4'>TIE</h1></div>");
     } else {
         for (var i = 0; i < 7; i++) {
@@ -49,7 +48,7 @@ function hide(content) {
 function move(content) {
     var move = $(content).attr("value");
     //validate the move
-    if (gameObj.grid[0][move] != ' ') {
+    if (gameObj.grid[0][move] !== ' ') {
         alert('Invalid move!');
     } else {
         makeAMove(move);
@@ -62,9 +61,9 @@ function showGameBoard(game) {
     gameBoard.css('background-color', game.theme.color);
     for (var i = 0; i < game.grid.length; i++) {
         for (var j = 0; j < game.grid[i].length; j++) {
-            if (game.grid[i][j] == "X") {
+            if (game.grid[i][j] === "X") {
                 gameBoard.append("<div class='tokenSlot'><img class='tokenImg' src='" + game.theme.playerToken.url + "'></div>");
-            } else if (game.grid[i][j] == "O") {
+            } else if (game.grid[i][j] === "O") {
                 gameBoard.append("<div class='tokenSlot'><img class='tokenImg' src='" + game.theme.computerToken.url + "'></div>");
             } else {
                 gameBoard.append("<div class='tokenSlot'><div class='tokenImg'></div></div>");
@@ -91,6 +90,7 @@ function setPage(content) {
 
 //This function shows the object game by drawing the chess board.
 function showGameDetail(game) {
+    console.log(game);
     setPage('game');
     gameObj = game;
     showGameControl(game);
@@ -108,7 +108,7 @@ function showGameList(data) {
             "<td><img class='icon avatar' src='" + data[i].theme.computerToken.url + "'></td>" +
             "<td>" + data[i].start + "</td>" +
             "<td>" + data[i].finish + "</td>" +
-            "<td><button class=\"btn btn-sm\" style='background-color: " + data[i].theme.color + "' onclick='getGame(\"" + data[i].id + "\")'>view</button></td>" +
+            "<td><button class=\"btn btn-sm\" style='background-color: " + data[i].theme.color + "' onclick='getGame(\"" + data[i]._id + "\")'>view</button></td>" +
             "</tr>");
     }
 }
@@ -133,7 +133,7 @@ function createNewGame() {
     var computerTokenId = $("#computer_token").val();
     $.ajax({
         //colorValue is a special value start with #.So, must encoded
-        url: '/connectfour/api/v2/sids/' + sid + '?color=' + encodeURIComponent(colorValue),
+        url: '/connectfour/api/v2/users/' + uid + '?color=' + encodeURIComponent(colorValue),
         method: 'POST',
         data: {
             "playerTokenId": playerTokenId,
@@ -167,19 +167,9 @@ function loadMetadata() {
     })
 }
 
-function getSID() {
-    $.ajax({
-        url: '/connectfour/api/v2/sids',
-        method: 'GET',
-        success: function (data, textStatus, request) {
-            sid = request.getResponseHeader('X-sid');
-        }
-    })
-}
-
 function getGameList() {
     $.ajax({
-        url: '/connectfour/api/v2/sids/' + sid,
+        url: '/connectfour/api/v2/users/' + uid,
         method: 'GET',
         success: function (data) {
             // a list of game objects
@@ -191,7 +181,7 @@ function getGameList() {
 //use sid and gid to get the current game object by using ajax.
 function getGame(gid) {
     $.ajax({
-        url: '/connectfour/api/v2/sids/' + sid + '/gids/' + gid,
+        url: '/connectfour/api/v2/users/' + uid + '/gids/' + gid,
         method: 'GET',
         success: function (data) {
             showGameDetail(data);
@@ -202,7 +192,7 @@ function getGame(gid) {
 //a post method to make a move by using ajax
 function makeAMove(move) {
     $.ajax({
-        url: '/connectfour/api/v2/sids/' + sid + '/gids/' + gameObj.id + '?move=' + move,
+        url: '/connectfour/api/v2/users/' + uid + '/gids/' + gameObj._id + '?move=' + move,
         method: 'POST',
         success: function (data) {
             showGameDetail(data);
@@ -226,9 +216,11 @@ function login() {
             'password': password,
         },
         contentType: 'application/x-www-form-urlencoded',
-        success: (data) => {
+        success: (data, textStatus, request) => {
             // correct inputs
             if(data){
+                uid = data._id;
+                alert(request.getResponseHeader('X-CSRF'));
                 setPage('main');
             }else{
                 alert('Server inner error! the user object is null');
