@@ -8,12 +8,13 @@ let csrfToken;
 
 /**
  * This function only for the canvas shows the matrix login style.
+ * Idea from: https://github.com/zeyakong/verbatimAnim
  */
 window.onload = function () {
     let canvas = document.getElementById("canvas");
     let context = canvas.getContext("2d");
-    let W = window.outerWidth;
-    let H = window.outerHeight;
+    let W = screen.width;
+    let H = screen.height;
     canvas.width = W;
     canvas.height = H;
     //set the login form at the my-auto
@@ -26,7 +27,7 @@ window.onload = function () {
         drops.push(0);
     }
 
-    let str = "The Matrix has you 010101010101";
+    let str = "The Matrix has you 01";
 
     function draw() {
         context.fillStyle = "rgba(0,0,0,0.05)";
