@@ -11,26 +11,29 @@
     <title>Game: Connect 4</title>
 </head>
 <body>
-
-<div class="container">
     <!--This content is the login page-->
     <div id="login_page">
-        <h4 class="text-center">Game: Connect Four</h4>
-        <form class="form-control mx-auto mt-4" id="login_form">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" onfocus="hideLoginMsg()">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <canvas id="canvas" style="background:#111"></canvas>
+        <div class="mx-auto">
+            <div class="mx-auto" id="login_info">
+                <h2 class="mx-auto text-center">Game: Connect Four</h2>
+                <form class="form-control mt-4 mx-auto" id="login_form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" onfocus="hideLoginMsg()">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" onfocus="hideLoginMsg()">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <span id="login_msg" class="text-danger"></span>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password" onfocus="hideLoginMsg()">
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-            <span id="login_msg" class="text-danger"></span>
-        </form>
+        </div>
     </div>
     <!--This content is the main page-->
+    <div class="container">
     <div id="main_page">
         <div class="row mt-5">
             <div class="col-8">

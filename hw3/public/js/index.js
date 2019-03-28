@@ -5,6 +5,51 @@ let gameObj;
 let csrfToken;
 
 // ############ functions ##############
+
+/**
+ * This function only for the canvas shows the matrix login style.
+ */
+window.onload = function () {
+    let canvas = document.getElementById("canvas");
+    let context = canvas.getContext("2d");
+    let W = window.outerWidth;
+    let H = window.outerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    //set the login form at the my-auto
+    $("#login_info").css('margin-top',"-"+H/1.3+"px");
+
+    let fontSize = 20;
+    let columns = Math.floor(W / fontSize);
+    let drops = [];
+    for (let i = 0; i < columns; i++) {
+        drops.push(0);
+    }
+
+    let str = "The Matrix has you 010101010101";
+
+    function draw() {
+        context.fillStyle = "rgba(0,0,0,0.05)";
+        context.fillRect(0, 0, W, H);
+        context.font = "700 " + fontSize + "px  Console";
+        context.fillStyle = "#00cc33";
+        for (let i = 0; i < columns; i++) {
+            let index = Math.floor(Math.random() * str.length);
+            let x = i * fontSize;
+            let y = drops[i] * fontSize;
+            context.fillText(str[index], x, y);
+            if (y >= canvas.height && Math.random() > 0.99) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+    }
+    draw();
+    setInterval(draw, 30);
+};
+
+
+
 //init function
 $(document).ready(function () {
     setPage('login');
