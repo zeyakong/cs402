@@ -1,25 +1,24 @@
 //############ global variables ############
-var uid;
-var metadata;
-var gameObj;
-var csrfToken;
+let user;
+let metadata;
+let gameObj;
+let csrfToken;
 
 // ############ functions ##############
 //init function
 $(document).ready(function () {
-    loadMetadata();
     //check the localStorage.
-    let storedUserId = localStorage.getItem('userId');
+    let storedUser = JSON.parse(localStorage.getItem('user'));
     let storedCSRF = localStorage.getItem('csrfToken');
-    if(storedCSRF && storedUserId){
+    if (storedCSRF && storedUser) {
         // already logged in
-        uid = storedUserId;
         csrfToken = storedCSRF;
+        user = storedUser;
         getGameList();
-    }else{
+    } else {
         setPage('login');
     }
-    $("#login_form").submit((e)=>{
+    $("#login_form").submit((e) => {
         //prevent Default functionality
         e.preventDefault();
         login();
@@ -107,6 +106,8 @@ function showGameDetail(game) {
 //show the list of games in main content in index.html page.
 function showGameList(data) {
     setPage('main');
+    loadMetadata();
+    $("#username_msg").text("Hello: " + user.email);
     $("#tbody_id").empty();
     for (var i = 0; i < data.length; i++) {
         $("#game_list").append("<tr>" +
@@ -140,14 +141,14 @@ function createNewGame() {
     var computerTokenId = $("#computer_token").val();
     $.ajax({
         //colorValue is a special value start with #.So, must encoded
-        url: '/connect4/api/v2/users/' + uid + '?color=' + encodeURIComponent(colorValue),
+        url: '/connect4/api/v2/users/' + user._id + '?color=' + encodeURIComponent(colorValue),
         method: 'POST',
         data: {
             "playerTokenId": playerTokenId,
             "computerTokenId": computerTokenId
         },
-        headers:{
-            'X-CSRF':csrfToken
+        headers: {
+            'X-CSRF': csrfToken
         },
         dataType: 'json',
         success: function (data) {
@@ -163,15 +164,17 @@ function loadMetadata() {
         method: 'GET',
         success: function (data) {
             metadata = data;
-            $("#color").val(metadata.default.color);
-            var playerTokenSelector = $("#player_token");
-            var computerTokenSelector = $("#computer_token");
+            $("#color").val(user.default.color);
+            let playerTokenSelector = $("#player_token");
+            let computerTokenSelector = $("#computer_token");
+            playerTokenSelector.empty();
+            computerTokenSelector.empty();
             for (var i = 0; i < data.tokens.length; i++) {
                 playerTokenSelector.append("<option value=" + data.tokens[i].id + ">" + data.tokens[i].name + "</option>");
                 computerTokenSelector.append("<option value=" + data.tokens[i].id + ">" + data.tokens[i].name + "</option>");
             }
-            playerTokenSelector.val(metadata.default.playerToken.id);
-            computerTokenSelector.val(metadata.default.computerToken.id);
+            playerTokenSelector.val(user.default.playerToken.id);
+            computerTokenSelector.val(user.default.computerToken.id);
             updateToken();
         }
     })
@@ -179,10 +182,10 @@ function loadMetadata() {
 
 function getGameList() {
     $.ajax({
-        url: '/connect4/api/v2/users/' + uid,
+        url: '/connect4/api/v2/users/' + user._id,
         method: 'GET',
-        headers:{
-            'X-CSRF':csrfToken
+        headers: {
+            'X-CSRF': csrfToken
         },
         success: function (data) {
             // a list of game objects
@@ -194,10 +197,10 @@ function getGameList() {
 //use sid and gid to get the current game object by using ajax.
 function getGame(gid) {
     $.ajax({
-        url: '/connect4/api/v2/users/' + uid + '/gids/' + gid,
+        url: '/connect4/api/v2/users/' + user._id + '/gids/' + gid,
         method: 'GET',
-        headers:{
-            'X-CSRF':csrfToken
+        headers: {
+            'X-CSRF': csrfToken
         },
         success: function (data) {
             showGameDetail(data);
@@ -208,10 +211,10 @@ function getGame(gid) {
 //a post method to make a move by using ajax
 function makeAMove(move) {
     $.ajax({
-        url: '/connect4/api/v2/users/' + uid + '/gids/' + gameObj._id + '?move=' + move,
+        url: '/connect4/api/v2/users/' + user._id + '/gids/' + gameObj._id + '?move=' + move,
         method: 'POST',
-        headers:{
-            'X-CSRF':csrfToken
+        headers: {
+            'X-CSRF': csrfToken
         },
         success: function (data) {
             showGameDetail(data);
@@ -227,6 +230,8 @@ function hideLoginMsg() {
 function login() {
     let email = $("#email").val();
     let password = $("#password").val();
+    $("#email").val("");
+    $("#password").val("");
     $.ajax({
         url: '/connect4/api/v2/login',
         method: 'POST',
@@ -237,18 +242,18 @@ function login() {
         contentType: 'application/x-www-form-urlencoded',
         success: (data, textStatus, request) => {
             // correct inputs
-            if(data){
-                uid = data._id;
+            if (data) {
+                user = data;
                 csrfToken = request.getResponseHeader('X-CSRF');
                 //store it into localStorage
-                localStorage.setItem('userId',data._id);
-                localStorage.setItem('csrfToken',csrfToken);
+                localStorage.setItem('user', JSON.stringify(data));
+                localStorage.setItem('csrfToken', csrfToken);
                 getGameList();
-            }else{
+            } else {
                 alert('Server inner error! the user object is null');
             }
         },
-        error:(data)=>{
+        error: (data) => {
             //invalid inputs
             $("#login_msg").text(data.responseJSON.msg);
         }
@@ -264,9 +269,49 @@ function logout() {
             setPage('login');
             //delete all variables/ empty local storage.
             gameObj = null;
-            uid = null;
+            user = null;
             csrfToken = null;
             localStorage.clear();
         }
     })
+}
+
+function updateTheme() {
+    //get new theme info
+    let playerTokenId = $("#player_token").val();
+    let computerTokenId = $("#computer_token").val();
+    let color = $("#color").val();
+    //ajax call
+    $.ajax({
+        url: '/connect4/api/v2/users/' + user._id + '/default',
+        method: 'PUT',
+        headers: {
+            'X-CSRF': csrfToken
+        },
+        data: {
+            'color': color,
+            'playerToken': JSON.stringify(findToken(playerTokenId)),
+            'computerToken': JSON.stringify(findToken(computerTokenId))
+        },
+        success: function (data) {
+            alert("successfully saved.");
+            //update local metadata
+            user.default = data;
+            localStorage.setItem('user',JSON.stringify(user));
+            getGameList();
+        }
+    })
+}
+
+function findToken(id) {
+    if (metadata) {
+        let tokens = metadata.tokens;
+        for (let i = 0; i < tokens.length; i++) {
+            if (tokens[i].id === id) {
+                return tokens[i];
+            }
+        }
+    } else {
+        return null;
+    }
 }

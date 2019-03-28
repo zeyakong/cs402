@@ -385,7 +385,6 @@ router.post('/connect4/api/v2/login', function (req, res, next) {
 });
 
 router.post('/connect4/api/v2/logout', function (req, res, next) {
-    console.log('come logout');
     // invalid the session
     if (req.session) {
         req.session.destroy();
@@ -404,7 +403,12 @@ router.post('/connect4/api/v2/logout', function (req, res, next) {
 router.put('/connect4/api/v2/users/:userid/default', function (req, res, next) {
     //get params
     let uid = req.params.userid;
-    let defaults = req.body.defaults;
+    let defaults = {
+        color: req.body.color,
+        playerToken: JSON.parse(req.body.playerToken),
+        computerToken: JSON.parse(req.body.computerToken)
+    };
+    console.log(defaults);
     if (defaults && uid) {
         //change the default.
         db.collection('users').updateOne({_id: ObjectId(uid)}, {$set: {default: defaults}}, (err, result) => {
