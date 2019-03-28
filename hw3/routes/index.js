@@ -367,16 +367,18 @@ router.post('/connect4/api/v2/users', function (req, res, next) {
     if (userObj) {
         if (isValidUser(userObj)) {
             //add default metadata for this user
-            userObj.default = metadata.default;
-            db.collection('users').insertOne(userObj, (err, result) => {
-                if (err) throw err;
-                res.send(result);
-            })
+            findMetadata((data)=>{
+                userObj.default =data;
+                db.collection('users').insertOne(userObj, (err, result) => {
+                    if (err) throw err;
+                    res.send(result.ops[0]);
+                })
+            });
         } else {
             res.status(400).send(new Error('invalid username or password'))
         }
     } else {
-        res.status(400).send(new Error('invalid body msg.'));
+        res.status(400).send(new Error('invalid body msg. correct format: { email:, password:xxx}'));
     }
 });
 
