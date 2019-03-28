@@ -7,6 +7,7 @@ let csrfToken;
 // ############ functions ##############
 //init function
 $(document).ready(function () {
+    setPage('login');
     //check the localStorage.
     let storedUser = JSON.parse(localStorage.getItem('user'));
     let storedCSRF = localStorage.getItem('csrfToken');
@@ -15,8 +16,6 @@ $(document).ready(function () {
         csrfToken = storedCSRF;
         user = storedUser;
         getGameList();
-    } else {
-        setPage('login');
     }
     $("#login_form").submit((e) => {
         //prevent Default functionality
@@ -190,6 +189,13 @@ function getGameList() {
         success: function (data) {
             // a list of game objects
             showGameList(data);
+        },
+        error: (data) => {
+            // unauthenticated request. clean all cache
+            gameObj = null;
+            user = null;
+            csrfToken = null;
+            localStorage.clear();
         }
     })
 }
@@ -230,8 +236,7 @@ function hideLoginMsg() {
 function login() {
     let email = $("#email").val();
     let password = $("#password").val();
-    $("#email").val("");
-    $("#password").val("");
+
     $.ajax({
         url: '/connect4/api/v2/login',
         method: 'POST',
@@ -243,6 +248,8 @@ function login() {
         success: (data, textStatus, request) => {
             // correct inputs
             if (data) {
+                $("#email").val("");
+                $("#password").val("");
                 user = data;
                 csrfToken = request.getResponseHeader('X-CSRF');
                 //store it into localStorage
@@ -255,7 +262,13 @@ function login() {
         },
         error: (data) => {
             //invalid inputs
+            $("#password").val("");
             $("#login_msg").text(data.responseJSON.msg);
+            //clean all cache
+            gameObj = null;
+            user = null;
+            csrfToken = null;
+            localStorage.clear();
         }
     })
 }
@@ -297,7 +310,7 @@ function updateTheme() {
             alert("successfully saved.");
             //update local metadata
             user.default = data;
-            localStorage.setItem('user',JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(user));
             getGameList();
         }
     })

@@ -323,7 +323,30 @@ router.post('/connect4/api/v2/users/:uid/gids/:gid', function (req, res, next) {
 });
 
 function isValidUser(user) {
-    return true;
+    let email = user.email;
+    let password = user.password;
+    return validateEmail(email) && validatePassword(password);
+}
+
+/**
+ * From stackoverflow: https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+ * @param email string email
+ * @returns {boolean}
+ */
+function validateEmail(email) {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+function validatePassword(password){
+    //check length
+    if(password.length<8){
+        return false;
+    }else{
+        //check the digital number
+        let re = new RegExp("[0-9]");
+        return re.test(String(password));
+    }
 }
 
 /**
@@ -335,7 +358,12 @@ function isValidUser(user) {
  */
 router.post('/connect4/api/v2/users', function (req, res, next) {
     //get body params
-    let userObj = req.body.user;
+    let email =  req.body.email;
+    let password = req.body.password;
+    let userObj = {
+        email: email,
+        password: password
+    };
     if (userObj) {
         if (isValidUser(userObj)) {
             //add default metadata for this user
