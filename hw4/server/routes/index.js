@@ -41,13 +41,18 @@ function cleanCards(cards) {
     return cards;
 }
 
-
+/**
+ * Design ideas
+ *
+ * All routers must have /users/ cause all the functionality requires the user logged in.
+ * uid: userId , mid: multiverseId, did: deckId.
+ * The prepath is '/mtg/api/v1'
+ */
 //############### routers ###################
 
 router.get('/index', (req, res, next) => {
     res.sendFile(path.join(__dirname + '/../public/index.html'));
 });
-
 
 /* login. */
 router.post('/mtg/api/v1/login', function (req, res, next) {
@@ -59,45 +64,33 @@ router.post('/logout', function (req, res, next) {
 
 });
 
-/* get a list of all users. */
-router.get('/users', function (req, res, next) {
-    // let deck1 = new Deck('123', '1233132');
-    // let deck2 = new Deck('1234', '12332222231231132');
-    //
-    // const kong = new User({
-    //     email: 'kong',
-    //     firstName: 'kong',
-    //     lastName: 'zeya',
-    //     enabled: true,
-    //     password: '123',
-    //     role: 'admin',
-    //     decks: [deck1, deck2]
-    // });
-    // kong.save().then(() => console.log('meow'));
-    // res.send('ok')
+// ############# admin routers ################
+
+router.all('/admin/:aid/*', (req, res, next) => {
 
 });
 
-/* admin create a new users. */
-router.post('/users', function (req, res, next) {
+
+/**
+ * admin add a new user
+ */
+router.post('/admin/:aid/users', (req, res, next) => {
 
 });
 
-/* get a specific users. */
-router.get('/users/:uid', function (req, res, next) {
-    let uid = req.params.uid;
-    User.findById(uid, (err, user) => {
-        if (err || !user) {
-            res.status(404).send('invalid uid');
-            return;
-        }
-        res.send(user);
-    });
+/**
+ * admin search users
+ */
+router.get('/admin/:aid/users', (req, res, next) => {
+
 });
 
-/* update users' info. This application only allows admin enable/ disable a user*/
-router.put('/users/:uid', function (req, res, next) {
-    if(req.body.enabled){
+/**
+ * admin update users
+ * This application only allows an admin to enable/ disable a user
+ */
+router.put('/admin/:aid/users', (req, res, next) => {
+    if (req.body.enabled) {
         let enabled = req.body.enabled;
         //update the user
         let uid = req.params.uid;
@@ -107,18 +100,31 @@ router.put('/users/:uid', function (req, res, next) {
                 return;
             }
             user.enabled = enabled;
-            user.save((err,user)=>{
+            user.save((err, user) => {
                 res.send(user);
             });
         });
-    }else{
+    } else {
         res.status('403').send('invalid request')
     }
 });
 
-/* get a list of all cards. */
-router.get('/users/:uid/cards', function (req, res, next) {
-    //total page 1720....
+
+//################# user routers ##################
+
+/**
+ * First : user validation:
+ * validate the uid and session and csrf and enabled status.
+ */
+router.all('/users/:uid/*', (req, res, next) => {
+
+});
+
+/**
+ * search cards.
+ */
+router.get('/users/:uid/cards', (req, res, next) => {
+//total page 1720....
     let page = req.query.page ? parseInt(req.query.page) : 1;
     page = page === 0 || page <= 0 ? 1 : page;
     let APIPage = Math.floor((page - 1) / 4) + 1;
@@ -151,8 +157,10 @@ router.get('/users/:uid/cards', function (req, res, next) {
     });
 });
 
-/* get a cards. */
-router.get('/users/:uid/cards/:mid', function (req, res, next) {
+/**
+ * get one card
+ */
+router.get('/users/:uid/cards/:mid', (req, res, next) => {
     if (req.params.mid) {
         request('https://api.magicthegathering.io/v1/cards/' + req.params.mid, function (error, response, body) {
             if (response && response.statusCode === 200) {
@@ -166,43 +174,39 @@ router.get('/users/:uid/cards/:mid', function (req, res, next) {
     }
 });
 
-/* add the cards to a deck */
-router.post('/users/:uid/cards/:mid/decks/:did', function (req, res, next) {
+/**
+ * create a deck
+ */
+router.post('/users/:uid/decks', (req, res, next) => {
 
 });
 
-/* delete the card of a deck */
-router.delete('/users/:uid/cards/:mid/decks/:did', function (req, res, next) {
+/**
+ * search decks
+ */
+router.get('/users/:uid/decks', (req, res, next) => {
 
 });
 
-/* update card for that deck */
-router.put('/users/:uid/cards/:mid/decks/:did', function (req, res, next) {
+/**
+ * get one deck
+ */
+router.get('/users/:uid/decks/:did', (req, res, next) => {
 
 });
 
-/* get a list of all decks for that user. */
-router.get('/users/:uid/decks', function (req, res, next) {
+/**
+ * get one card
+ */
+router.delete('/users/:uid/decks/:did', (req, res, next) => {
 
 });
 
-/* creat a new deck for that user. */
-router.post('/users/:uid/decks', function (req, res, next) {
-
-});
-
-/* get a specific deck. */
-router.get('/users/:uid/decks/:did', function (req, res, next) {
-
-});
-
-/* update a specific deck. */
-router.put('/users/:uid/decks/:did', function (req, res, next) {
-
-});
-
-/* delete a specific deck. */
-router.delete('/users/:uid/decks/:deckid', function (req, res, next) {
+/**
+ * update a deck: update the name/description or modify the cards info.
+ * data was send by body
+ */
+router.put('/users/:uid/decks/:did', (req, res, next) => {
 
 });
 
