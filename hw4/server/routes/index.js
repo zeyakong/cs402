@@ -44,8 +44,8 @@ function cleanCards(cards) {
 /**
  * Design ideas
  *
- * All routers must have /users/ cause all the functionality requires the user logged in.
- * uid: userId , mid: multiverseId, did: deckId.
+ * All routers must have /users or /admin  cause all the functionality requires the user logged in.
+ * uid: userId , mid: multiverseId, did: deckId, aid: adminId.
  * The prepath is '/mtg/api/v1'
  */
 //############### routers ###################
