@@ -2,8 +2,35 @@ let express = require('express');
 let router = express.Router();
 let request = require('request');
 let path = require('path');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/hw4', {useNewUrlParser: true});
 
-//############### methods ###################
+//############ constructors & methods ##################
+const User = mongoose.model('User', {
+    email: String,
+    firstName: String,
+    lastName: String,
+    enabled: Boolean,
+    password: String,
+    role: String,
+    decks: [],
+});
+
+const Deck = (id, owner, cards, name, description) => {
+    this.id = id;
+    this.owner = owner;
+    this.cards = cards;
+    this.name = name;
+    this.description = description;
+};
+
+const CardSummary = (id, multiverseid, name, qty) => {
+    this.id = id;
+    this.multiverseid = multiverseid;
+    this.name = name;
+    this.qty = qty;
+};
+
 
 function cleanCards(cards) {
     for (let i = cards.length - 1; i >= 0; i--) {
@@ -34,6 +61,20 @@ router.post('/logout', function (req, res, next) {
 
 /* get a list of all users. */
 router.get('/users', function (req, res, next) {
+    // let deck1 = new Deck('123', '1233132');
+    // let deck2 = new Deck('1234', '12332222231231132');
+    //
+    // const kong = new User({
+    //     email: 'kong',
+    //     firstName: 'kong',
+    //     lastName: 'zeya',
+    //     enabled: true,
+    //     password: '123',
+    //     role: 'admin',
+    //     decks: [deck1, deck2]
+    // });
+    // kong.save().then(() => console.log('meow'));
+    // res.send('ok')
 
 });
 
@@ -44,12 +85,35 @@ router.post('/users', function (req, res, next) {
 
 /* get a specific users. */
 router.get('/users/:uid', function (req, res, next) {
-
+    let uid = req.params.uid;
+    User.findById(uid, (err, user) => {
+        if (err || !user) {
+            res.status(404).send('invalid uid');
+            return;
+        }
+        res.send(user);
+    });
 });
 
-/* update users' info. */
+/* update users' info. This application only allows admin enable/ disable a user*/
 router.put('/users/:uid', function (req, res, next) {
-
+    if(req.body.enabled){
+        let enabled = req.body.enabled;
+        //update the user
+        let uid = req.params.uid;
+        User.findById(uid, (err, user) => {
+            if (err || !user) {
+                res.status(404).send('invalid uid');
+                return;
+            }
+            user.enabled = enabled;
+            user.save((err,user)=>{
+                res.send(user);
+            });
+        });
+    }else{
+        res.status('403').send('invalid request')
+    }
 });
 
 /* get a list of all cards. */
