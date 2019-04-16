@@ -47,3 +47,7 @@ testem.log
 Thumbs.db
 hw4/.idea/
 hw4/client/.vscode/
+hw3/.idea/
+hw4/server/.idea/
+hw4/server/node_modules/
+hw4/client/node_modules/

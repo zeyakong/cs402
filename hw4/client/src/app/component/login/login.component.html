@@ -1,3 +1,22 @@
-<p>
-  login works!
-</p>
+<div class="loginBg">
+    <div class="container">
+        <div class="mx-auto">
+            <div class="mx-auto" id="login_info">
+                <h4 class="mx-auto text-center">Magic The Gathering</h4>
+                <div class="form-control mt-4 mx-auto" id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" [(ngModel)]="email" aria-describedby="emailHelp"
+                            placeholder="Enter email" (focus)=hideMSG()>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" [(ngModel)]="password" placeholder="Password" (focus)=hideMSG()>
+                    </div>
+                    <button type="submit" class="btn btn-primary" (click)="login()">Login</button>
+                    <span *ngIf="msg" id="login_msg" class="text-danger">{{msg}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

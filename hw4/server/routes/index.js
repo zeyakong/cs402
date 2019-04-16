@@ -55,8 +55,29 @@ router.get('/index', (req, res, next) => {
 });
 
 /* login. */
-router.post('/mtg/api/v1/login', function (req, res, next) {
-
+router.post('/login', function (req, res, next) {
+    let email = req.body.email;
+    let password = req.body.password;
+    console.log(email + password);
+    if (email && password) {
+        User.findOne({email: email, password: password}, (err, user) => {
+            if (err) {
+                res.status(404).send('invalid inputs');
+                return;
+            }
+            if (user) {
+                console.log(user);
+                //store in session.
+                req.session.user = user;
+                delete user.password;
+                res.status(200).send(user);
+            } else {
+                res.status(404).send('invalid inputs');
+            }
+        })
+    } else {
+        res.status(404).send('invalid inputs');
+    }
 });
 
 /* logout. */
@@ -67,7 +88,7 @@ router.post('/logout', function (req, res, next) {
 // ############# admin routers ################
 
 router.all('/admin/:aid/*', (req, res, next) => {
-
+    next();
 });
 
 
@@ -117,7 +138,7 @@ router.put('/admin/:aid/users', (req, res, next) => {
  * validate the uid and session and csrf and enabled status.
  */
 router.all('/users/:uid/*', (req, res, next) => {
-
+    next()
 });
 
 /**
