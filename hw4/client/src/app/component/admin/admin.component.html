@@ -1,3 +1,46 @@
-<p>
-  admin works!
-</p>
+<div class="container">
+  <h1>Hello admin: {{adminId}}</h1>
+  <input [(ngModel)]="firstname" name="firstname" placeholder="firstname" type="text">
+  <input [(ngModel)]="lastname" name="lastname" placeholder="lastname" type="text">
+  <input [(ngModel)]="email" name='email' placeholder="email" type="email">
+  <input [(ngModel)]="password" type="password" name="password" placeholder="password">
+  <small class="ml-2">role</small>
+  <select [(ngModel)]="selectedRole">
+    <option>user</option>
+    <option>admin</option>
+  </select>
+  <small class="ml-2">enabled</small>
+  <input type="checkbox" name="enabled" [(ngModel)]="enabled">
+  <button class="btn btn-success ml-2" (click)="createUser()">create user</button>
+  <hr>
+  <input #searchBox id="search-box" (input)="search(searchBox.value)" placeholder="search" />
+  <select class="ml-2">
+    <option>enabled</option>
+    <option>disabled</option>
+  </select>
+  <select class="ml-2">
+    <option>user</option>
+    <option>admin</option>
+  </select>
+
+  <table class="userTable">
+    <tr>
+      <th>id</th>
+      <th>email</th>
+      <th>firstName</th>
+      <th>lastName</th>
+      <th>role</th>
+      <th>enabled</th>
+    </tr>
+    <tr *ngFor="let user of users$ | async">
+      <td>{{user._id}}</td>
+      <td>{{user.email}}</td>
+      <td>{{user.firstName}}</td>
+      <td>{{user.lastName}}</td>
+      <td>{{user.role}}</td>
+      <td>{{user.enabled}}</td>
+    </tr>
+  </table>
+  <hr>
+  <button (click)="logout()" class="btn btn-sm btn-danger">logout</button>
+</div>

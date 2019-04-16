@@ -15,10 +15,14 @@ const httpOptions = {
 export class LoginService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
   ) { }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(rootURL+'/login', { email: email,  password: password });
+  }
+
+  logout(){
+    return this.http.post<any>(rootURL+'/logout',{});
   }
 }

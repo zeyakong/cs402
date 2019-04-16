@@ -16,8 +16,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.isBackground = this.globals.isBackground;
-
-    console.log('bg: ' + this.isBackground);
   }
 }
 

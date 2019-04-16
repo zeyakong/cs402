@@ -12,11 +12,12 @@ declare const $: any;
 })
 export class LoginComponent implements OnInit {
   @Input() email: string; password: string;
-  msg : string = null;
+  msg: string = null;
   constructor(
     private globals: Globals,
     private router: Router,
-    private loginService: LoginService
+    private loginService: LoginService,
+
   ) { }
 
   ngOnInit() {
@@ -26,10 +27,12 @@ export class LoginComponent implements OnInit {
     this.loginService.login(this.email, this.password).subscribe(
       data => {
         if (data) {
-          console.log(data);
+
+
+
           if (data.role == 'admin') {
             this.globals.isBackground = false;
-            this.router.navigate(['/admin/'+'123']);
+            this.router.navigate(['/admin/' + data._id]);
           } else if (data.role == 'user') {
             this.globals.isBackground = false;
             this.router.navigate(['/user/']);
@@ -40,11 +43,10 @@ export class LoginComponent implements OnInit {
         }
       },
       error => {
-        console.log(error);
         this.msg = 'invalid inputs';
       });
   }
-  hideMSG(){
-    this.msg=null;
+  hideMSG() {
+    this.msg = null;
   }
 }

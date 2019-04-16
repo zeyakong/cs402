@@ -4,6 +4,8 @@ let request = require('request');
 let path = require('path');
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/hw4', {useNewUrlParser: true});
+let ObjectId = require('mongoose').Types.ObjectId;
+
 
 //############ constructors & methods ##################
 const User = mongoose.model('User', {
@@ -41,6 +43,36 @@ function cleanCards(cards) {
     return cards;
 }
 
+
+//##########################fuctions########
+function isValidUser(user) {
+    let email = user.email;
+    let password = user.password;
+    return validateEmail(email) && validatePassword(password);
+}
+
+/**
+ * From stackoverflow: https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+ * @param email string email
+ * @returns {boolean}
+ */
+function validateEmail(email) {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+function validatePassword(password) {
+    //check length
+    if (password.length < 8) {
+        return false;
+    } else {
+        //check the digital number
+        let re = new RegExp("[0-9]");
+        return re.test(String(password));
+    }
+}
+
+
 /**
  * Design ideas
  *
@@ -58,7 +90,6 @@ router.get('/index', (req, res, next) => {
 router.post('/login', function (req, res, next) {
     let email = req.body.email;
     let password = req.body.password;
-    console.log(email + password);
     if (email && password) {
         User.findOne({email: email, password: password}, (err, user) => {
             if (err) {
@@ -66,7 +97,6 @@ router.post('/login', function (req, res, next) {
                 return;
             }
             if (user) {
-                console.log(user);
                 //store in session.
                 req.session.user = user;
                 delete user.password;
@@ -82,7 +112,14 @@ router.post('/login', function (req, res, next) {
 
 /* logout. */
 router.post('/logout', function (req, res, next) {
-
+    // invalid the session
+    if (req.session) {
+        req.session.destroy();
+        res.status(200).send('ok');
+    } else {
+        //session doesn't exist.
+        res.status(400).send();
+    }
 });
 
 // ############# admin routers ################
@@ -96,14 +133,65 @@ router.all('/admin/:aid/*', (req, res, next) => {
  * admin add a new user
  */
 router.post('/admin/:aid/users', (req, res, next) => {
-
+//get body params
+    let email = req.body.email;
+    let password = req.body.password;
+    let firstname = req.body.firstName;
+    let lastname = req.body.lastName;
+    let role = req.body.role;
+    let enabled = req.body.enabled;
+    console.log(email + password + firstname + lastname + role + enabled);
+    if (email && password && firstname && lastname && role) {
+        let userObj = new User({
+            email: email,
+            password: password,
+            firstName: firstname,
+            lastName: lastname,
+            role: role,
+            enabled: enabled
+        });
+        if (userObj) {
+            if (isValidUser(userObj)) {
+                //add default metadata for this user
+                userObj.save((err, data) => {
+                    if (err) {
+                        res.status(400).send('invalid username')
+                    }
+                    res.status(200).send(data);
+                });
+            } else {
+                res.status(400).send('invalid username or password')
+            }
+        } else {
+            res.status(400).send('invalid body msg. correct format: { email:, password:xxx}');
+        }
+    } else {
+        res.status(400).send('invalid body params');
+    }
 });
 
 /**
  * admin search users
  */
 router.get('/admin/:aid/users', (req, res, next) => {
-
+    let keywords = req.query.keywords ? req.query.keywords : '';
+    keywords = keywords === '*' ? '' : keywords;
+    let regex = new RegExp(keywords);
+    let objId = new ObjectId((keywords.length < 12) ? "123456789012" : keywords);
+    User.find({
+        $or: [
+            {'_id': objId},
+            {lastName: regex},
+            {firstName: regex},
+            {email: keywords}
+        ]
+    }, (err, data) => {
+        if (err) {
+            res.status(404).send('error')
+        } else {
+            res.send(data);
+        }
+    })
 });
 
 /**
