@@ -11,7 +11,7 @@ export class Card {
     toughness: string;
     legalities: [];
     source: string;
-    imageURL: string;
+    imageUrl: string;
     rulings: [];
     manaCost: string;
 }

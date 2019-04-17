@@ -13,7 +13,7 @@
   <input type="checkbox" name="enabled" [(ngModel)]="enabled">
   <button class="btn btn-success ml-2" (click)="createUser()">create user</button>
   <hr>
-  <input #searchBox id="search-box" (input)="search(searchBox.value)" placeholder="search" />
+  <input #searchBox (input)="search(searchBox.value)" placeholder="search" />
   <select class="ml-2">
     <option>enabled</option>
     <option>disabled</option>

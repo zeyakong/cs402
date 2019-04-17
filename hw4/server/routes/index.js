@@ -3,6 +3,7 @@ let router = express.Router();
 let request = require('request');
 let path = require('path');
 const mongoose = require('mongoose');
+let uuid = require('uuid');
 mongoose.connect('mongodb://localhost:27017/hw4', {useNewUrlParser: true});
 let ObjectId = require('mongoose').Types.ObjectId;
 
@@ -18,20 +19,20 @@ const User = mongoose.model('User', {
     decks: [],
 });
 
-const Deck = (id, owner, cards, name, description) => {
+function Deck(id, owner, cards, name, description) {
     this.id = id;
     this.owner = owner;
     this.cards = cards;
     this.name = name;
     this.description = description;
-};
+}
 
-const CardSummary = (id, multiverseid, name, qty) => {
+function CardSummary(id, multiverseid, name, qty) {
     this.id = id;
     this.multiverseid = multiverseid;
     this.name = name;
     this.qty = qty;
-};
+}
 
 
 function cleanCards(cards) {
@@ -98,8 +99,9 @@ router.post('/login', function (req, res, next) {
             }
             if (user) {
                 //store in session.
+                user = user.toObject();
                 req.session.user = user;
-                delete user.password;
+                delete user['password'];
                 res.status(200).send(user);
             } else {
                 res.status(404).send('invalid inputs');
@@ -235,10 +237,17 @@ router.all('/users/:uid/*', (req, res, next) => {
 router.get('/users/:uid/cards', (req, res, next) => {
 //total page 1720....
     let page = req.query.page ? parseInt(req.query.page) : 1;
+    let name = req.query.name ? req.query.name : '';
+    let type = req.query.type ? req.query.type : '';
+    let colors = req.query.colors ? req.query.colors : '';
+    let set = req.query.set ? req.query.set : '';
+
     page = page === 0 || page <= 0 ? 1 : page;
     let APIPage = Math.floor((page - 1) / 4) + 1;
     let APISection = (page - 1) % 4 + 1;
-    request('https://api.magicthegathering.io/v1/cards?page=' + APIPage, function (error, response, body) {
+
+    let url = '?name=' + name + '&type=' + type + '&colors=' + colors + '&set=' + set + '&page=' + APIPage;
+    request('https://api.magicthegathering.io/v1/cards' + url, function (error, response, body) {
         // check section
         let APICards = JSON.parse(body).cards;
         switch (APISection) {
@@ -287,14 +296,37 @@ router.get('/users/:uid/cards/:mid', (req, res, next) => {
  * create a deck
  */
 router.post('/users/:uid/decks', (req, res, next) => {
-
+    let deckName = req.body.name;
+    let uid = req.params.uid;
+    let description = req.body.description;
+    console.log('name: ' + deckName + ", uid: " + uid + ", des: " + description);
+    if (deckName && uid && description) {
+        //find user and add this deck into that user.
+        User.findById(uid, (err, user) => {
+            if (err) {
+                res.status(400).send('cannot find the user with that uid');
+            }
+            let deck = new Deck(uuid.v4(), uid, [], deckName, description);
+            user.decks.push(deck);
+            user.save();
+            res.send('ok');
+        });
+    } else {
+        res.status(400).send('invalid body');
+    }
 });
 
 /**
  * search decks
  */
 router.get('/users/:uid/decks', (req, res, next) => {
-
+    let uid = req.params.uid;
+    User.findById(uid, (err, data) => {
+        if (err) {
+            res.status(400).send('cannot find the user with that uid');
+        }
+        res.send(data.decks);
+    });
 });
 
 /**

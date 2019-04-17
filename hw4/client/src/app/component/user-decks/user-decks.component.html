@@ -1,0 +1,22 @@
+<input [(ngModel)]="deckName" name="deckName" placeholder="name" type="text">
+<input [(ngModel)]="description" name="description" placeholder="description" type="text">
+<button (click)="createDeck()">Create Deck</button>
+
+<table class="table table-striped mt-2">
+    <thead class="table-secondary">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let deck of decks">
+            <td>{{deck.id}}</td>
+            <td>{{deck.name}}</td>
+            <td>{{deck.description}}</td>
+            <td><button class="btn btn-sm btn-info" (click)="selectedCard = card">view</button></td>
+        </tr>
+    </tbody>
+</table>

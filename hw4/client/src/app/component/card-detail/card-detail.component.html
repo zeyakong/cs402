@@ -1,0 +1,33 @@
+<div class="card mt-4" style="width: 18rem;">
+    <img [src]="selectedCard.imageUrl">
+    <div class="card-body">
+        <h4 class="card-title">{{selectedCard.name}}</h4>
+        <p>multiverseid: {{selectedCard.multiverseid}}</p>
+        <small>
+            <strong>colors:</strong> {{selectedCard.colors}}
+            <br> <strong>type:</strong> {{selectedCard.type}}
+            <br> <strong>rarity:</strong> {{selectedCard.rarity}}
+            <br> <strong>power:</strong> {{selectedCard.power}}
+            <br> <strong>toughness:</strong> {{selectedCard.toughness}}
+            <br> <strong>legalities:</strong>
+            <div *ngFor="let one of selectedCard.legalities">
+                format:{{one.format}}, legality: {{one.legality}}
+                <br>
+            </div>
+            <br>
+            <strong>rulings:</strong>
+            <div *ngFor="let one of selectedCard.rulings">
+                date:{{one.date}}, text: {{one.text}}
+                <br>
+            </div>
+            <br> <strong>set:</strong> {{selectedCard.set}}
+        </small>
+        <p class="card-text mt-2">
+            <strong>text:</strong>
+            <br>
+            {{selectedCard.text}}
+        </p>
+
+        <a href="#" class="btn btn-primary">Add to Deck</a>
+    </div>
+</div>
