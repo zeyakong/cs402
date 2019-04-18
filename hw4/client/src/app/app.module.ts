@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Globals } from './_sevice/globals';
 import { CardDetailComponent } from './component/card-detail/card-detail.component';
 import { UserDecksComponent } from './component/user-decks/user-decks.component';
+import { UserCardsComponent } from './component/user-cards/user-cards.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { UserDecksComponent } from './component/user-decks/user-decks.component'
     UserComponent,
     CardDetailComponent,
     UserDecksComponent,
+    UserCardsComponent
   ],
   imports: [
     BrowserModule,

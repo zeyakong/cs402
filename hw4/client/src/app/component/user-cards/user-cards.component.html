@@ -1,0 +1,60 @@
+<div class="container">
+    <!-- cards -->
+        <div class="form-inline mt-3">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Name</label>
+                </div>
+                <input [(ngModel)]="name" placeholder="name" class="form-control" />
+            </div>
+            <div class="input-group ml-1">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Color</label>
+                </div>
+                <input [(ngModel)]="colors" placeholder="color" class="form-control" />
+            </div>
+            <div class="input-group ml-1">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Type</label>
+                </div>
+                <input [(ngModel)]="type" placeholder="type" class="form-control" />
+            </div>
+            <div class="input-group ml-1">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Set</label>
+                </div>
+                <input [(ngModel)]="set" placeholder="set" class="form-control" />
+            </div>
+            <button class="btn btn-primary ml-3" (click)="searchCards()">Search</button>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <table class="table table-striped mt-2">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Colors</th>
+                            <th>Set</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let card of cards">
+                            <td>{{card.name}}</td>
+                            <td>{{card.type}}</td>
+                            <td>{{card.colors[0]}}</td>
+                            <td>{{card.set}}</td>
+                            <td><button class="btn btn-sm btn-info" (click)="selectedCard = card">view</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    <a>1 2 3 4 ...</a>
+                </div>
+            </div>
+            <div class="col">
+                <app-card-detail *ngIf="selectedCard" [selectedCard]="selectedCard"></app-card-detail>
+            </div>
+        </div>
+</div>

@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Card } from '../_model/Card'
 import { Observable } from 'rxjs';
 import { Deck } from '../_model/Deck';
 
 const rootURL = 'http://localhost:3000/api/v1';
-
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +23,7 @@ export class UserService {
   }
 
   getCards(userId: string, name: string, type: string, set: string, color: string, page: number = 1): Observable<Card[]> {
-    return this.http.get<Card[]>(rootURL + '/users/' + userId + '/cards?name=' + name + '&type=' + type + '&colors=' + color + '&set=' + set + '&page=' + page);
+    return this.http.get<Card[]>(rootURL + '/users/' + userId + '/cards?name=' + name + '&type=' + type + '&colors=' + color + '&set=' + set + '&page=' + page,httpOptions);
   }
 
   getDecks(userId: string) : Observable<Deck[]>{
@@ -32,6 +34,6 @@ export class UserService {
     let deck = new Deck();
     deck.name = deckName;
     deck.description= description;
-    return this.http.post<Deck>(rootURL + '/users/' + userId+'/decks',deck);
+    return this.http.post<Deck>(rootURL + '/users/' + userId+'/decks',deck,httpOptions);
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Deck } from 'src/app/_model/Deck';
 import { UserService } from 'src/app/_sevice/user.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -10,22 +11,30 @@ import { UserService } from 'src/app/_sevice/user.service';
 })
 export class UserDecksComponent implements OnInit {
   decks: Deck[];
-  @Input() userId: string; deckName: string; description: string;
+
+  @Input() deckName: string; description: string; userId: string;
 
   constructor(
     private userService: UserService,
+    private router: Router,
+    private activatedRouter: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.userService.getDecks(this.userId).subscribe(data => {
-      this.decks = data;
+    this.activatedRouter.params.subscribe(data => {
+      this.userId = data.userId;
+      console.log(data);
+      this.userService.getDecks(data.userId).subscribe(data => {
+        this.decks = data;
+      });
     });
-  }
 
+    
+  }
 
   createDeck() {
     this.userService.createDeck(this.userId, this.deckName, this.description).subscribe(data => {
-      console.log(data);
+      this.router.navigate(['/users/' + this.userId + '/decks']);
     })
   }
 
