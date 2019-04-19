@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Globals } from './_sevice/globals';
 
 @Component({
   selector: 'app-root',
@@ -11,11 +10,9 @@ export class AppComponent implements OnInit {
   isBackground = true;
 
   constructor(
-    private globals: Globals,
   ) { }
 
   ngOnInit() {
-    this.isBackground = this.globals.isBackground;
   }
 }
 

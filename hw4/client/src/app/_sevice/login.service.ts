@@ -14,17 +14,8 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
+
 export class LoginService {
-  // Observable user sources
-  private userSource: Subject<User> = new Subject<User>();
-
-  // Observable user streams
-  user$ = this.userSource.asObservable();
-
-  // Service message commands
-  setUser(user: User) {
-    this.userSource.next(user);
-  }
 
   constructor(
     private http: HttpClient,
@@ -35,6 +26,15 @@ export class LoginService {
   }
 
   logout() {
+    localStorage.clear();
     return this.http.post(rootURL + '/logout', {});
+  }
+
+  setUser(user: User) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  getUser() {
+    return JSON.parse(localStorage.getItem('user'));
   }
 }

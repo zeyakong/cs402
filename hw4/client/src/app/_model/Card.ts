@@ -1,3 +1,5 @@
+
+
 export class Card {
     //name, colors, type, rarity, text, power, toughness, legality, source, image and all rulings
     name: string;

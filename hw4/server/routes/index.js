@@ -91,6 +91,7 @@ router.get('/index', (req, res, next) => {
 router.post('/login', function (req, res, next) {
     let email = req.body.email;
     let password = req.body.password;
+    console.log(email + password);
     if (email && password) {
         User.findOne({email: email, password: password}, (err, user) => {
             if (err) {

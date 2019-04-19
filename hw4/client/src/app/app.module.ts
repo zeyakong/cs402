@@ -8,7 +8,6 @@ import { AdminComponent } from './component/admin/admin.component';
 import { UserComponent } from './component/user/user.component';
 import { FormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http';
-import { Globals } from './_sevice/globals';
 import { CardDetailComponent } from './component/card-detail/card-detail.component';
 import { UserDecksComponent } from './component/user-decks/user-decks.component';
 import { UserCardsComponent } from './component/user-cards/user-cards.component';
@@ -30,7 +29,7 @@ import { UserCardsComponent } from './component/user-cards/user-cards.component'
     FormsModule,
     HttpClientModule
   ],
-  providers: [Globals],
-  bootstrap: [AppComponent]
+  providers: [],
+  bootstrap: [AppComponent,]
 })
 export class AppModule { }

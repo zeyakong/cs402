@@ -3,11 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { LoginService } from 'src/app/_sevice/login.service';
 import { User } from 'src/app/_model/User';
 import { Subscription } from 'rxjs';
-
-
-
-
-
+import { routerNgProbeToken } from '@angular/router/src/router_module';
 
 
 @Component({
@@ -18,26 +14,30 @@ import { Subscription } from 'rxjs';
 
 export class UserComponent implements OnInit {
   user: User = null;
-  subscription: Subscription;
 
   constructor(
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
   ) {
-    this.subscription = this.loginService.user$.subscribe(
-      user => {
-        this.user = user;
-      }
-    );
   }
 
   ngOnInit() {
-
+    // this.user = this.globals.user;
+    this.user = this.loginService.getUser();
   }
 
   logout() {
     this.loginService.logout().subscribe(_ => {
       this.router.navigate(['/login']);
     });
+  }
+
+  getUser() {
+    // this.globals.setUser(new User());
+    // this.globals.user$.subscribe(user => {
+    //   this.user = user;
+    //   console.log(user);
+    // });
+    console.log(this.user);
   }
 }

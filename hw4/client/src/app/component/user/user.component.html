@@ -11,10 +11,9 @@
             <button class="nav-link" [routerLink]="['decks']" class="btn btn-lg">Decks</button>
         </ul>
         <div class="my-lg-0">
-            <a>{{user}}</a>
-            <button class="btn btn-outline-secondary my-2 my-sm-0" (click)="logout()">Logout</button>
+            <a *ngIf="user">User: {{user.firstName}} {{user.lastName}} </a>
+            <button class="btn btn-outline-secondary my-2 my-sm-0 ml-2" (click)="logout()">Logout</button>
         </div>
     </div>
 </nav>
-
 <router-outlet></router-outlet>

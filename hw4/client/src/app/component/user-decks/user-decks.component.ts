@@ -17,19 +17,9 @@ export class UserDecksComponent implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
-    private activatedRouter: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.activatedRouter.params.subscribe(data => {
-      this.userId = data.userId;
-      console.log(data);
-      this.userService.getDecks(data.userId).subscribe(data => {
-        this.decks = data;
-      });
-    });
-
-    
   }
 
   createDeck() {

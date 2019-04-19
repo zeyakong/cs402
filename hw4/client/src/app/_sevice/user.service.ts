@@ -14,7 +14,6 @@ const httpOptions = {
 })
 
 export class UserService {
-  
 
   cards: Card[];
   constructor(

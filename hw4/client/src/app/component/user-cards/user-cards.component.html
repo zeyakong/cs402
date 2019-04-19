@@ -1,8 +1,5 @@
 <div class="container">
   <!-- cards -->
-  <a *ngIf="cardt">{{cardt.name}}</a>
-  <a *ngIf="user">{{user}}</a>
-  <button (click)="chooseCard()">t</button>
   <div class="form-inline mt-3">
     <div class="input-group">
       <div class="input-group-prepend">
@@ -32,7 +29,7 @@
   </div>
   <div class="row">
     <div class="col-8">
-      <table class="table table-striped mt-2">
+      <table class="table table-striped mt-2" *ngIf="visible">
         <thead class="table-secondary">
           <tr>
             <th>Name</th>
@@ -48,16 +45,22 @@
             <td>{{card.type}}</td>
             <td>{{card.colors[0]}}</td>
             <td>{{card.set}}</td>
-            <td><button class="btn btn-sm btn-info" (click)="cardId = card.multiverseid">view</button></td>
+            <td><button class="btn btn-sm btn-info" (click)="selectedCardId = card.multiverseid">view</button></td>
           </tr>
         </tbody>
       </table>
+      <div *ngIf="!visible" class="text-center mt-4">
+        <div class="spinner-grow text-success" role="status" style="width: 3rem; height: 3rem;">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
       <div class="text-center">
         <a>1 2 3 4 ...</a>
       </div>
     </div>
+
     <div class="col">
-      <app-card-detail *ngIf="cardId" [cardId]="cardId"></app-card-detail>
+      <app-card-detail *ngIf="selectedCardId" [selectedCardId]="selectedCardId"></app-card-detail>
     </div>
   </div>
 </div>

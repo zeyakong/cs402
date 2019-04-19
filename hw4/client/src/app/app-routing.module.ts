@@ -5,6 +5,7 @@ import { AdminComponent } from './component/admin/admin.component';
 import { LoginComponent } from './component/login/login.component';
 import { UserDecksComponent } from './component/user-decks/user-decks.component';
 import { UserCardsComponent } from './component/user-cards/user-cards.component';
+import { CardDetailComponent } from './component/card-detail/card-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -23,8 +24,13 @@ const routes: Routes = [
         path: '',
         redirectTo: 'cards',
         pathMatch: 'full'
-      }
+      },
+      
     ]
+  },
+  {
+    path: 'cards/detail',
+    component: CardDetailComponent
   },
   { path: 'admin', component: AdminComponent },
 ];

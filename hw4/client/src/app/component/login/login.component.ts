@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router'
 import { LoginService } from '../../_sevice/login.service'
-import { Globals } from '../../_sevice/globals';
 import { User } from 'src/app/_model/User';
 
 declare const $: any;
@@ -17,10 +16,8 @@ export class LoginComponent implements OnInit {
   @Input() email: string; password: string;
   msg: string = null;
   constructor(
-    private globals: Globals,
     private router: Router,
     private loginService: LoginService,
-
   ) { }
 
   ngOnInit() {
@@ -30,6 +27,7 @@ export class LoginComponent implements OnInit {
     this.loginService.login(this.email, this.password).subscribe(
       user => {
         if (user) {
+          // this.globals.user = user;
           this.loginService.setUser(user);
           if (user.role == 'admin') {
             this.router.navigate(['/admin']);

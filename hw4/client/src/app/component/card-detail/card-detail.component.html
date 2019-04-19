@@ -1,5 +1,4 @@
-<a>card detial: {{cardId}},  {{user}}</a>
-<div class="card mt-4" style="width: 18rem;">
+<div class="card mt-4" style="width: 18rem;" *ngIf="card && visible">
     <img [src]="card.imageUrl">
     <div class="card-body">
         <h4 class="card-title">{{card.name}}</h4>
@@ -30,5 +29,11 @@
         </p>
 
         <a href="#" class="btn btn-primary">Add to Deck</a>
+    </div>
+</div>
+
+<div *ngIf="selectedCardId &&!visible" class="text-center mt-4">
+    <div class="spinner-grow text-success" role="status" style="width: 3rem; height: 3rem;">
+        <span class="sr-only">Loading...</span>
     </div>
 </div>
