@@ -1,31 +1,32 @@
+<a>card detial: {{cardId}},  {{user}}</a>
 <div class="card mt-4" style="width: 18rem;">
-    <img [src]="selectedCard.imageUrl">
+    <img [src]="card.imageUrl">
     <div class="card-body">
-        <h4 class="card-title">{{selectedCard.name}}</h4>
-        <p>multiverseid: {{selectedCard.multiverseid}}</p>
+        <h4 class="card-title">{{card.name}}</h4>
+        <p>multiverseid: {{card.multiverseid}}</p>
         <small>
-            <strong>colors:</strong> {{selectedCard.colors}}
-            <br> <strong>type:</strong> {{selectedCard.type}}
-            <br> <strong>rarity:</strong> {{selectedCard.rarity}}
-            <br> <strong>power:</strong> {{selectedCard.power}}
-            <br> <strong>toughness:</strong> {{selectedCard.toughness}}
+            <strong>colors:</strong> {{card.colors}}
+            <br> <strong>type:</strong> {{card.type}}
+            <br> <strong>rarity:</strong> {{card.rarity}}
+            <br> <strong>power:</strong> {{card.power}}
+            <br> <strong>toughness:</strong> {{card.toughness}}
             <br> <strong>legalities:</strong>
-            <div *ngFor="let one of selectedCard.legalities">
+            <div *ngFor="let one of card.legalities">
                 format:{{one.format}}, legality: {{one.legality}}
                 <br>
             </div>
             <br>
             <strong>rulings:</strong>
-            <div *ngFor="let one of selectedCard.rulings">
+            <div *ngFor="let one of card.rulings">
                 date:{{one.date}}, text: {{one.text}}
                 <br>
             </div>
-            <br> <strong>set:</strong> {{selectedCard.set}}
+            <br> <strong>set:</strong> {{card.set}}
         </small>
         <p class="card-text mt-2">
             <strong>text:</strong>
             <br>
-            {{selectedCard.text}}
+            {{card.text}}
         </p>
 
         <a href="#" class="btn btn-primary">Add to Deck</a>

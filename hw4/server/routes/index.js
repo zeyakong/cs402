@@ -117,7 +117,7 @@ router.post('/logout', function (req, res, next) {
     // invalid the session
     if (req.session) {
         req.session.destroy();
-        res.status(200).json('ok');
+        res.status(200).send();
     } else {
         //session doesn't exist.
         res.status(400).send();
@@ -159,7 +159,7 @@ router.post('/admin/:aid/users', (req, res, next) => {
                     if (err) {
                         res.status(400).send('invalid username')
                     }
-                    res.status(200).json(data);
+                    res.status(200).send(data);
                 });
             } else {
                 res.status(400).send('invalid username or password')
@@ -191,7 +191,7 @@ router.get('/admin/:aid/users', (req, res, next) => {
         if (err) {
             res.status(404).send('error')
         } else {
-            res.json(data);
+            res.send(data);
         }
     })
 });
@@ -212,7 +212,7 @@ router.put('/admin/:aid/users', (req, res, next) => {
             }
             user.enabled = enabled;
             user.save((err, user) => {
-                res.json(user);
+                res.send(user);
             });
         });
     } else {
@@ -254,22 +254,22 @@ router.get('/users/:uid/cards', (req, res, next) => {
             case 1:
                 //get first 0-25
                 APICards = APICards.slice(0, 25);
-                res.json(cleanCards(APICards));
+                res.send(cleanCards(APICards));
                 return;
             case 2:
                 //get first 25-50
                 APICards = APICards.slice(25, 50);
-                res.json(cleanCards(APICards));
+                res.send(cleanCards(APICards));
                 return;
             case 3:
                 //get first 50-75
                 APICards = APICards.slice(50, 75);
-                res.json(cleanCards(APICards));
+                res.send(cleanCards(APICards));
                 return;
             default:
                 //get first 75-100
                 APICards = APICards.slice(75, 100);
-                res.json(cleanCards(APICards));
+                res.send(cleanCards(APICards));
                 return;
         }
     });
@@ -282,7 +282,7 @@ router.get('/users/:uid/cards/:mid', (req, res, next) => {
     if (req.params.mid) {
         request('https://api.magicthegathering.io/v1/cards/' + req.params.mid, function (error, response, body) {
             if (response && response.statusCode === 200) {
-                res.json(body);
+                res.send(JSON.parse(body).card);
             } else {
                 res.status(404).send('invalid multiverseid.');
             }
@@ -309,7 +309,7 @@ router.post('/users/:uid/decks', (req, res, next) => {
             let deck = new Deck(uuid.v4(), uid, [], deckName, description);
             user.decks.push(deck);
             user.save();
-            res.json(deck);
+            res.send(deck);
         });
     } else {
         res.status(400).send('invalid body');

@@ -1,6 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router'
 import { LoginService } from 'src/app/_sevice/login.service';
+import { User } from 'src/app/_model/User';
+import { Subscription } from 'rxjs';
+
+
+
+
 
 
 
@@ -11,22 +17,26 @@ import { LoginService } from 'src/app/_sevice/login.service';
 })
 
 export class UserComponent implements OnInit {
-  userId: string = '';
+  user: User = null;
+  subscription: Subscription;
 
   constructor(
-    private activatedRouter: ActivatedRoute,
     private loginService: LoginService,
     private router: Router
-  ) { }
+  ) {
+    this.subscription = this.loginService.user$.subscribe(
+      user => {
+        this.user = user;
+      }
+    );
+  }
 
   ngOnInit() {
-    this.activatedRouter.params.subscribe(params => {
-      this.userId = params['uid'];
-    });
+
   }
 
   logout() {
-    this.loginService.logout().subscribe(_=>{
+    this.loginService.logout().subscribe(_ => {
       this.router.navigate(['/login']);
     });
   }

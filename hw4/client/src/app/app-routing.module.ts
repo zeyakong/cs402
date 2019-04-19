@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {
-    path: 'users/:uid', component: UserComponent, children: [
+    path: 'user', component: UserComponent, children: [
       {
         path: 'decks',
         component: UserDecksComponent,
@@ -26,8 +26,7 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'admins/:aid', component: AdminComponent },
-  { path: 'users/:uid/decks', component: UserDecksComponent }
+  { path: 'admin', component: AdminComponent },
 ];
 
 @NgModule({

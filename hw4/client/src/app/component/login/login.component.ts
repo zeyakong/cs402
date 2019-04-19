@@ -12,6 +12,8 @@ declare const $: any;
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+
+
   @Input() email: string; password: string;
   msg: string = null;
   constructor(
@@ -26,23 +28,23 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.loginService.login(this.email, this.password).subscribe(
-      data => {
-        if (data) {
-          if (data.role == 'admin') {
-            this.globals.isBackground = false;
-            this.router.navigate(['/admins/' + data._id]);
-          } else if (data.role == 'user') {
-            this.globals.isBackground = false;
-            this.router.navigate(['/users/' + data._id]);
+      user => {
+        if (user) {
+          this.loginService.setUser(user);
+          if (user.role == 'admin') {
+            this.router.navigate(['/admin']);
+          } else if (user.role == 'user') {
+            this.router.navigate(['/user']);
           } else {
-            this.globals.isBackground = true;
-            this.router.navigate(['/login']);
+            this.msg = 'incorrect email or password';
           }
         }
+        this.msg = 'incorrect email or password';
       },
-      error => {
-        this.msg = 'invalid inputs';
+      err => {
+        this.msg = 'incorrect email or password';
       });
+
   }
   hideMSG() {
     this.msg = null;
