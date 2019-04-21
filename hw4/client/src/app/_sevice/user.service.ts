@@ -39,4 +39,16 @@ export class UserService {
     deck.description = description;
     return this.http.post<Deck>(rootURL + '/users/' + userId + '/decks', deck, httpOptions);
   }
+
+  deleteDeck(userId: string, deckId: string) {
+    return this.http.delete(rootURL + '/users/' + userId + '/decks/' + deckId);
+  }
+
+  getADeck(userId: string, deckId: string): Observable<Deck> {
+    return this.http.get<Deck>(rootURL + '/users/' + userId + '/decks/' + deckId);
+  }
+
+  updateDeck(userId: string, deckId: string, deck: Deck): Observable<Deck> {
+    return this.http.put<Deck>(rootURL + '/users/' + userId + '/decks/' + deckId, { 'deck': deck }, httpOptions);
+  }
 }

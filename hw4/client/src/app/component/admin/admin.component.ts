@@ -33,6 +33,7 @@ export class AdminComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    
     this.activatedRouter.params.subscribe(params => {
       this.adminId = params['aid'];
     });

@@ -1,6 +1,6 @@
 <div class="container">
   <!-- cards -->
-  <div class="form-inline mt-3">
+  <div class="form-inline mt-5">
     <div class="input-group">
       <div class="input-group-prepend">
         <label class="input-group-text">Name</label>
@@ -29,28 +29,30 @@
   </div>
   <div class="row">
     <div class="col-8">
-      <table class="table table-striped mt-2" *ngIf="visible">
+      <table class="table table-striped mt-2 shadow" *ngIf="visible">
         <thead class="table-secondary">
           <tr>
+            <th>Action</th>
             <th>Name</th>
             <th>Type</th>
             <th>Colors</th>
             <th>Set</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let card of cards">
-            <td>{{card.name}}</td>
-            <td>{{card.type}}</td>
-            <td>{{card.colors[0]}}</td>
-            <td>{{card.set}}</td>
-            <td><button class="btn btn-sm btn-info" (click)="selectedCardId = card.multiverseid">view</button></td>
+            <td class="text-center"><button class="btn btn-sm btn-secondary" title="add to deck"
+                (click)="toAdd = true;selectedCard = card ;selectedCardId = card.multiverseid "> +
+              </button></td>
+            <td (click)="selectedCardId = card.multiverseid; toAdd = false">{{card.name}}</td>
+            <td (click)="selectedCardId = card.multiverseid; toAdd = false">{{card.type}}</td>
+            <td (click)="selectedCardId = card.multiverseid; toAdd = false">{{card.colors[0]}}</td>
+            <td (click)="selectedCardId = card.multiverseid; toAdd = false">{{card.set}}</td>
           </tr>
         </tbody>
       </table>
       <div *ngIf="!visible" class="text-center mt-4">
-        <div class="spinner-grow text-success" role="status" style="width: 3rem; height: 3rem;">
+        <div class="spinner-grow text-info" role="status" style="width: 3rem; height: 3rem;">
           <span class="sr-only">Loading...</span>
         </div>
       </div>
@@ -60,7 +62,9 @@
     </div>
 
     <div class="col">
+      <app-deck-list *ngIf="toAdd" [selectedCard]="selectedCard"></app-deck-list>
       <app-card-detail *ngIf="selectedCardId" [selectedCardId]="selectedCardId"></app-card-detail>
     </div>
   </div>
 </div>
+<div style="height:200px;"></div>

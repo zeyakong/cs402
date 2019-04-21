@@ -301,7 +301,7 @@ router.post('/users/:uid/decks', (req, res, next) => {
     let uid = req.params.uid;
     let description = req.body.description;
     console.log('name: ' + deckName + ", uid: " + uid + ", des: " + description);
-    if (deckName && uid && description) {
+    if (deckName && uid) {
         //find user and add this deck into that user.
         User.findById(uid, (err, user) => {
             if (err) {
@@ -326,7 +326,7 @@ router.get('/users/:uid/decks', (req, res, next) => {
         if (err) {
             res.status(400).send('cannot find the user with that uid');
         }
-        res.json(data);
+        res.send(data.decks);
     });
 });
 
@@ -334,14 +334,35 @@ router.get('/users/:uid/decks', (req, res, next) => {
  * get one deck
  */
 router.get('/users/:uid/decks/:did', (req, res, next) => {
-
+    User.findById(req.params.uid, (err, user) => {
+        if (err) res.status(400).send(err);
+        let decks = user.decks.toObject();
+        let deck = null;
+        for (let i = decks.length - 1; i >= 0; i--) {
+            if (decks[i].id === req.params.did) {
+                deck = decks[i];
+            }
+        }
+        res.send(deck);
+    });
 });
 
 /**
- * get one card
+ * delete one deck
  */
 router.delete('/users/:uid/decks/:did', (req, res, next) => {
-
+    User.findById(req.params.uid, (err, user) => {
+        if (err) res.status(400).send(err);
+        let decks = user.decks.toObject();
+        for (let i = decks.length - 1; i >= 0; i--) {
+            if (decks[i].id === req.params.did) {
+                decks.splice(i, 1);
+            }
+        }
+        user.decks = decks;
+        user.save();
+        res.json('ok');
+    });
 });
 
 /**
@@ -349,7 +370,22 @@ router.delete('/users/:uid/decks/:did', (req, res, next) => {
  * data was send by body
  */
 router.put('/users/:uid/decks/:did', (req, res, next) => {
-
+    User.findById(req.params.uid, (err, user) => {
+        if (err) {
+            res.status(400).send(err);
+            return;
+        }
+        let decks = user.decks.toObject();
+        for (let i = decks.length - 1; i >= 0; i--) {
+            if (decks[i].id === req.params.did) {
+                decks[i] = req.body.deck;
+            }
+        }
+        user.decks = decks;
+        user.save().then(_=>{
+            res.json('ok');
+        });
+    });
 });
 
 

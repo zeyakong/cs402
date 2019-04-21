@@ -1,0 +1,26 @@
+<div class="mt-2 card">
+  <div class=" card-body">
+    <h5 *ngIf="selectedCard">Add {{selectedCard.name}} to: </h5>
+    <div class="input-group mt-2">
+      <div class="input-group-prepend">
+        <label class="input-group-text sameSize">Deck</label>
+      </div>
+      <select placeholder="Decks" [(ngModel)]="selectedDeckId" name="deck" class="custom-select"
+        (ngModelChange)='updateStatus()'>
+        <option *ngFor="let deck of decks" [value]="deck.id">
+          {{deck.name}}
+        </option>
+      </select>
+    </div>
+    <div class="input-group mt-2">
+      <div class="input-group-prepend">
+        <label class="input-group-text sameSize">Quantity</label>
+      </div>
+      <input type="number" class="form-control" [(ngModel)]="quantity"
+        [disabled]='!validAdd' />
+    </div>
+    <button class="btn btn-sm btn-success form-control mt-2" (click)="addCardToDeck()"
+      [disabled]='!validAdd'>Add</button>
+    <small class="text-danger" *ngIf="validError">{{validError}}</small>
+  </div>
+</div>

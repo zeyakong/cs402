@@ -11,7 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CardDetailComponent } from './component/card-detail/card-detail.component';
 import { UserDecksComponent } from './component/user-decks/user-decks.component';
 import { UserCardsComponent } from './component/user-cards/user-cards.component';
-
+import { DeckDetailComponent } from './component/deck-detail/deck-detail.component';
+import { DeckListComponent } from './component/deck-list/deck-list.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,9 @@ import { UserCardsComponent } from './component/user-cards/user-cards.component'
     UserComponent,
     CardDetailComponent,
     UserDecksComponent,
-    UserCardsComponent
+    UserCardsComponent,
+    DeckDetailComponent,
+    DeckListComponent
   ],
   imports: [
     BrowserModule,

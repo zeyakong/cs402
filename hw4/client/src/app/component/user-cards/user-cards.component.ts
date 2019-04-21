@@ -3,6 +3,7 @@ import { Card } from 'src/app/_model/Card';
 import { UserService } from 'src/app/_sevice/user.service';
 import { User } from 'src/app/_model/User';
 import { LoginService } from 'src/app/_sevice/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-cards',
@@ -16,15 +17,23 @@ export class UserCardsComponent implements OnInit {
   selectedCardId: string = null;
   user: User = null;
   visible: boolean = false;
+  toAdd: boolean = false;
+  selectedCard: Card = null;
 
   constructor(
     private userService: UserService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router
   ) {
   }
 
   ngOnInit() {
-    this.user = this.loginService.getUser();
+    if (this.loginService.getUser()) {
+      this.user = this.loginService.getUser();
+    } else {
+      this.router.navigate(['/login']);
+      return;
+    }
 
     if (this.user) {
       this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors).subscribe(data => {

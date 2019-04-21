@@ -1,0 +1,45 @@
+<div class="container mt-5" *ngIf="deck">
+  <div class="row mt-3">
+    <div class="col-8">
+      <button [routerLink]="[ '/user/decks']" class="btn btn-info btn-sm">Back</button>
+      <div class="input-group input-group-lg mt-3" style="width:50%">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Deck Name: </div>
+        </div>
+        <input [(ngModel)]="deckName" type="text" class="form-control" (ngModelChange)='changeDeck()'>
+      </div>
+      <h5 class="mt-2">Description</h5>
+      <input [(ngModel)]="deckDescription" type="text" class="form-control" style="height:100px;"
+        (ngModelChange)='changeDeck()' />
+
+      <button class="btn btn-primary mt-2" [disabled]='!changed' (click)="updateDeck()">Save Changes</button>
+      <br>
+      <small *ngIf="nameError" class="text-danger">{{nameError}}</small>
+      <hr>
+      <h5 class="mt-2">Cards</h5>
+      <p *ngIf="!cardSummary">no card in this deck, you can add cards from <a [routerLink]="[ '/user/cards']">cards
+          page</a>
+      </p>
+
+      <table class="table table-striped mt-2" *ngIf="cardSummary">
+        <thead class="table-secondary">
+          <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let card of cardSummary">
+            <td (click)="selectedCardId = card.multiverseid">{{card.name}}</td>
+            <td>{{card.qty}}</td>
+            <td><button class="btn btn-sm btn-danger">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <app-card-detail *ngIf="selectedCardId" [selectedCardId]="selectedCardId"></app-card-detail>
+    </div>
+  </div>
+</div>

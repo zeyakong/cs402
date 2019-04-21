@@ -3,6 +3,7 @@ import { Card } from 'src/app/_model/Card';
 import { UserService } from 'src/app/_sevice/user.service';
 import { User } from 'src/app/_model/User';
 import { LoginService } from 'src/app/_sevice/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-detail',
@@ -18,10 +19,15 @@ export class CardDetailComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router
   ) {
-
-    this.user = this.loginService.getUser();
+    if (this.loginService.getUser()) {
+      this.user = this.loginService.getUser();
+    } else {
+      this.router.navigate(['/login']);
+      return;
+    }
   }
 
   ngOnInit() {

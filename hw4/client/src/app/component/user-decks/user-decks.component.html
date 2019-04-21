@@ -1,23 +1,41 @@
 <div class="container">
-    <input [(ngModel)]="deckName" name="deckName" placeholder="name" type="text">
-    <input [(ngModel)]="description" name="description" placeholder="description" type="text">
-    <button (click)="createDeck()">Create Deck</button>
+    <div class="form-inline mt-5">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text">Name</label>
+            </div>
+            <input [(ngModel)]="deckName" name="deckName" placeholder="name" type="text" class="form-control">
+        </div>
 
-    <table class="table table-striped mt-2">
+        <div class="input-group ml-2">
+            <div class="input-group-prepend">
+                <label class="input-group-text">Description</label>
+            </div>
+            <input [(ngModel)]="description" class="form-control" name="description" placeholder="description"
+                type="text" style="width:500px;">
+        </div>
+        <button class="btn btn-primary ml-3" (click)="createDeck()">Create Deck</button>
+    </div>
+
+    <table class="table table-striped mt-2 shadow">
         <thead class="table-secondary">
             <tr>
-                <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
+                <th>number of cards</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let deck of decks">
-                <td>{{deck.id}}</td>
-                <td>{{deck.name}}</td>
-                <td>{{deck.description}}</td>
-                <td><button class="btn btn-sm btn-info" (click)="selectedCard = card">view</button></td>
+                <td (click)="showDeck(deck.id)">{{deck.name}}</td>
+                <td (click)="showDeck(deck.id)">{{deck.description}}</td>
+                <td (click)="showDeck(deck.id)">{{deck.cards.length}}</td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-danger" (click)="deleteDeck(deck.id)">Delete</button>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>

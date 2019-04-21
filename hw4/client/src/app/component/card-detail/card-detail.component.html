@@ -27,13 +27,11 @@
             <br>
             {{card.text}}
         </p>
-
-        <a href="#" class="btn btn-primary">Add to Deck</a>
     </div>
 </div>
 
 <div *ngIf="selectedCardId &&!visible" class="text-center mt-4">
-    <div class="spinner-grow text-success" role="status" style="width: 3rem; height: 3rem;">
+    <div class="spinner-grow text-info" role="status" style="width: 3rem; height: 3rem;">
         <span class="sr-only">Loading...</span>
     </div>
 </div>

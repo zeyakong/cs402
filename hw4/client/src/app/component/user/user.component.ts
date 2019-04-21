@@ -19,11 +19,15 @@ export class UserComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
   ) {
+    if (this.loginService.getUser()) {
+      this.user = this.loginService.getUser();
+    } else {
+      this.router.navigate(['/login']);
+      return;
+    }
   }
 
   ngOnInit() {
-    // this.user = this.globals.user;
-    this.user = this.loginService.getUser();
   }
 
   logout() {
