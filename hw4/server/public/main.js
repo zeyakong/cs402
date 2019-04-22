@@ -123,7 +123,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var rootURL = 'http://localhost:3000/api/v1';
+var rootURL = 'http://138.49.184.168:3000/api/v1';
 var AdminService = /** @class */ (function () {
     function AdminService(http, loginService) {
         this.http = http;
@@ -175,7 +175,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var rootURL = 'http://localhost:3000/api/v1';
+var rootURL = 'http://138.49.184.168:3000/api/v1';
 var LoginService = /** @class */ (function () {
     function LoginService(http) {
         this.http = http;
@@ -232,7 +232,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var rootURL = 'http://localhost:3000/api/v1';
+var rootURL = 'http://138.49.184.168:3000/api/v1';
 var UserService = /** @class */ (function () {
     function UserService(http, loginService) {
         this.http = http;

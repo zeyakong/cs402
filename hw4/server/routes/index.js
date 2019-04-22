@@ -161,8 +161,6 @@ router.post('/logout', function (req, res, next) {
 // ############# admin routers ################
 
 router.all('/admin/:aid/*', (req, res, next) => {
-    next();
-    return;
     let pathUid = req.params.aid;
     let sessionUser = req.session.user;
     let sessionCsrfToken = req.session.csrfToken;
@@ -289,8 +287,6 @@ router.put('/admin/:aid/users/:uid', (req, res, next) => {
  * validate the uid and session and csrf and enabled status.
  */
 router.all('/users/:uid/*', (req, res, next) => {
-    next();
-    return;
     // authenticate users
     let pathUid = req.params.uid;
     let sessionUser = req.session.user;
