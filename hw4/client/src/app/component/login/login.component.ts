@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
         this.msg = 'incorrect email or password';
       },
       err => {
-        this.msg = 'incorrect email or password';
+        this.msg = 'Incorrect user credencials';
       });
 
   }

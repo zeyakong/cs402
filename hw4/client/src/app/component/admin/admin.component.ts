@@ -65,27 +65,32 @@ export class AdminComponent implements OnInit {
   }
 
   createUser() {
-    console.log('email ' + this.email + ',name: ' + this.firstname + this.lastname + ", password: " + this.password + ", role:" + this.selectedRole + ", enabled: " + this.enabled)
-    let user: User = new User();
-    user.email = this.email;
-    user.password = this.password;
-    user.enabled = this.enabled;
-    user.firstName = this.firstname;
-    user.lastName = this.lastname;
-    user.role = this.selectedRole;
-    console.log(user);
+    if (this.email && this.firstname && this.lastname && this.password && this.selectedRole) {
+      console.log('email ' + this.email + ',name: ' + this.firstname + this.lastname + ", password: " + this.password + ", role:" + this.selectedRole + ", enabled: " + this.enabled)
+      let user: User = new User();
+      user.email = this.email;
+      user.password = this.password;
+      user.enabled = this.enabled;
+      user.firstName = this.firstname;
+      user.lastName = this.lastname;
+      user.role = this.selectedRole;
+      console.log(user);
 
-    this.adminService.createUser(this.user._id, user).subscribe(
-      data => {
-        if (data) {
-          alert('create successfully');
-        }
-      },
-      err => {
-        if (err) {
-          console.log('err:' + err)
-        }
-      });
+      this.adminService.createUser(this.user._id, user).subscribe(
+        data => {
+          if (data) {
+            alert('create successfully');
+            this.router.navigate(['/admin']);
+          }
+        },
+        err => {
+          if (err) {
+            alert(err.error.msg);
+          }
+        });
+    } else {
+      alert('Please complete the form.');
+    }
   }
 
   changeStatus(user: User, searchValue: string) {

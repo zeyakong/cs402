@@ -25,7 +25,7 @@ export class DeckListComponent implements OnInit {
     private loginService: LoginService,
     private router: Router
   ) {
-    let user : User= this.loginService.getUser();
+    let user: User = this.loginService.getUser();
     if (user && user.role == 'user') {
       this.user = user;
     } else {
@@ -73,7 +73,6 @@ export class DeckListComponent implements OnInit {
 
     //push data into this deck and update.
     currentDeck.cards.push(cardSummary);
-    console.log(currentDeck);
     this.userService.updateDeck(this.user._id, this.selectedDeckId, currentDeck).subscribe(
       deck => {
         this.userService.getDecks(this.user._id).subscribe(decks => this.decks = decks);
@@ -86,6 +85,9 @@ export class DeckListComponent implements OnInit {
   updateStatus() {
     // this.selectedDeckId;
     // this.selectedCard;
+    if (!this.selectedDeckId || !this.selectedCard) {
+      return;
+    }
     let selectedDeckCards: CardSummary[] = null;
     for (let i = 0; i < this.decks.length; i++) {
       if (this.decks[i].id == this.selectedDeckId) {
