@@ -1,0 +1,3 @@
+{"_id":{"$oid":"5cbd783295a229fb78d52a84"},"decks":[],"email":"a@b.com","firstName":"Bilbo","lastName":"Baggins","enabled":true,"password":"#123456789","role":"admin","__v":0}
+{"_id":{"$oid":"5cbd783295a229fb78d52a85"},"decks":[],"email":"b@c.com","firstName":"Frodo","lastName":"Baggins","enabled":true,"password":"@123456789","role":"user","__v":0}
+{"_id":{"$oid":"5cbd78a995a36cfb7dac8f59"},"decks":[],"email":"test@a.com","password":"kzy142857","firstName":"Angular","lastName":"Node","role":"user","enabled":true,"__v":6}
