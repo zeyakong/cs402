@@ -1,9 +1,54 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+  <a class="navbar-brand" [routerLink]="[ '/admin']">Magic The Gathering</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mx-auto btn-group">
+      <button class="nav-link" [routerLink]="['cards']" class="btn btn-lg ">Cards</button>
+      <button class="nav-link" [routerLink]="['decks']" class="btn btn-lg">Decks</button>
+    </ul>
+    <div class="my-lg-0">
+      <a *ngIf="user">Admin: {{user.firstName}} {{user.lastName}} </a>
+      <button class="btn btn-outline-secondary my-2 my-sm-0 ml-2" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
 <div class="container">
-  <h1>Hello admin: {{adminId}}</h1>
-  <input [(ngModel)]="firstname" name="firstname" placeholder="firstname" type="text">
-  <input [(ngModel)]="lastname" name="lastname" placeholder="lastname" type="text">
-  <input [(ngModel)]="email" name='email' placeholder="email" type="email">
-  <input [(ngModel)]="password" type="password" name="password" placeholder="password">
+  <div class="form-inline mt-4">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <label class="input-group-text">firstName</label>
+      </div>
+      <input [(ngModel)]="firstname" name="firstname" class="form-control" type="text">
+    </div>
+    <div class="input-group ml-2">
+      <div class="input-group-prepend">
+        <label class="input-group-text">lastName</label>
+      </div>
+      <input [(ngModel)]="lastname" name="lastname" class="form-control" type="text">
+    </div>
+
+    <div class="input-group ml-2">
+      <div class="input-group-prepend">
+        <label class="input-group-text">email</label>
+      </div>
+      <input [(ngModel)]="email" name='email' class="form-control" type="email">
+    </div>
+    <div class="input-group ml-2">
+      <div class="input-group-prepend">
+        <label class="input-group-text">password</label>
+      </div>
+      <input [(ngModel)]="password" type="password" name="password" class="form-control">
+    </div>
+  </div>
+
+
+
+
   <small class="ml-2">role</small>
   <select [(ngModel)]="selectedRole">
     <option>user</option>

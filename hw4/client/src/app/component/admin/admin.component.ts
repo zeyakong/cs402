@@ -17,8 +17,8 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 export class AdminComponent implements OnInit {
   users$: Observable<User[]>;
   private searchTerms = new Subject<string>();
-  adminId: string = null;
   @Input() email: string; firstname: string; password: string; lastname: string; selectedRole: string; enabled: boolean = false;
+  user: User;
 
   // Push a search term into the observable stream.
   search(term: string): void {
@@ -26,18 +26,19 @@ export class AdminComponent implements OnInit {
   }
 
   constructor(
-    private activatedRouter: ActivatedRoute,
     private loginService: LoginService,
     private router: Router,
     private adminService: AdminService,
-  ) { }
+  ) {
+    if (this.loginService.getUser()) {
+      this.user = this.loginService.getUser();
+    } else {
+      this.router.navigate(['/login']);
+      return;
+    }
+  }
 
   ngOnInit() {
-    
-    this.activatedRouter.params.subscribe(params => {
-      this.adminId = params['aid'];
-    });
-
     this.users$ = this.searchTerms.pipe(
       // wait 300ms after each keystroke before considering the term
       debounceTime(300),
@@ -46,7 +47,7 @@ export class AdminComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.adminService.getUsers(this.adminId, term)),
+      switchMap((term: string) => this.adminService.getUsers(this.user._id, term)),
     );
   }
 
@@ -76,7 +77,7 @@ export class AdminComponent implements OnInit {
     user.role = this.selectedRole;
     console.log(user);
 
-    this.adminService.createUser(this.adminId, user).subscribe(
+    this.adminService.createUser(this.user._id, user).subscribe(
       data => {
         if (data) {
           console.log("success" + data);

@@ -5,6 +5,7 @@ import { UserService } from 'src/app/_sevice/user.service';
 import { User } from 'src/app/_model/User';
 import { LoginService } from 'src/app/_sevice/login.service';
 import { CardSummary } from 'src/app/_model/CardSummary';
+import { Card } from 'src/app/_model/Card';
 
 @Component({
   selector: 'app-deck-detail',
@@ -75,6 +76,40 @@ export class DeckDetailComponent implements OnInit {
     });
   }
 
+  deleteCard(card: CardSummary) {
+    let r = confirm("Are you sure to delete this card from that deck?");
+    if (r == true) {
+      //remove this element.
+      let index = this.cardSummary.indexOf(card);
+
+      this.cardSummary.splice(index, 1);
+      this.userService.updateDeck(this.user._id, this.deck.id, this.deck).subscribe(
+        deck => {
+          this.getDeck();
+          this.changed = false;
+        }
+      );
+    }
+
+  }
+
+  changeQty(card: CardSummary) {
+    let newQtyPro = prompt("Please enter your new quantity", '');
+    let newQty = parseInt(newQtyPro);
+
+    if (!newQty || newQty <= 0) {
+    } else {
+      card.qty = newQty;
+      //save this change
+      this.userService.updateDeck(this.user._id, this.deck.id, this.deck).subscribe(
+        deck => {
+          this.getDeck();
+          this.changed = false;
+        }
+      );
+    }
+  }
+
   updateDeck() {
     //get current deck
     this.deck.name = this.deckName;
@@ -85,6 +120,5 @@ export class DeckDetailComponent implements OnInit {
         this.changed = false;
       }
     );
-
   }
 }

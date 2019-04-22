@@ -63,7 +63,7 @@ export class UserDecksComponent implements OnInit {
   }
 
   deleteDeck(deckId: string) {
-    let r = confirm("Are you sure to delete that deck?");
+    let r = confirm("Are you sure to delete this deck?");
     if (r == true) {
       this.userService.deleteDeck(this.user._id, deckId).subscribe(
         _ => {
