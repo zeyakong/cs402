@@ -29,7 +29,7 @@ export class AdminComponent implements OnInit {
     private router: Router,
     private adminService: AdminService,
   ) {
-    let user : User= this.loginService.getUser();
+    let user: User = this.loginService.getUser();
     if (user && user.role == 'admin') {
       this.user = user;
     } else {
@@ -59,18 +59,9 @@ export class AdminComponent implements OnInit {
   }
 
   logout() {
-    this.loginService.logout().subscribe(
-      data => {
-        //successfully logged out.
-        //delete local storage
-        this.router.navigate(['/login']);
-      },
-      error => {
-        if (error) {
-          //some error happened.
-          this.router.navigate(['/login']);
-        }
-      });
+    this.loginService.logout().subscribe(_ => {
+      this.router.navigate(['/login']);
+    });
   }
 
   createUser() {
@@ -87,7 +78,7 @@ export class AdminComponent implements OnInit {
     this.adminService.createUser(this.user._id, user).subscribe(
       data => {
         if (data) {
-          console.log("success" + data);
+          alert('create successfully');
         }
       },
       err => {

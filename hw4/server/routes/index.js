@@ -136,17 +136,20 @@ router.post('/logout', function (req, res, next) {
 // ############# admin routers ################
 
 router.all('/admin/:aid/*', (req, res, next) => {
-    next();
-    return;
-    let pathUid = req.params.uid;
+    let pathUid = req.params.aid;
     let sessionUser = req.session.user;
     let sessionCsrfToken = req.session.csrfToken;
     let reqCsrfToken = req.get('X-CSRF');
     if (reqCsrfToken && sessionCsrfToken && sessionUser && pathUid) {
+
         // verify the csrfToken
+        console.log(reqCsrfToken);
+        console.log(sessionCsrfToken);
         if (reqCsrfToken === sessionCsrfToken) {
-            //verify the user
+
             User.findById(pathUid, (err, user) => {
+
+                console.log(user);
                 if (user && sessionUser && pathUid === sessionUser._id && user.role === 'admin') {
                     next();
                 } else {
@@ -254,8 +257,6 @@ router.put('/admin/:aid/users/:uid', (req, res, next) => {
  * validate the uid and session and csrf and enabled status.
  */
 router.all('/users/:uid/*', (req, res, next) => {
-    next();
-    return;
     // authenticate users
     let pathUid = req.params.uid;
     let sessionUser = req.session.user;

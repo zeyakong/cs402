@@ -572,15 +572,8 @@ var AdminComponent = /** @class */ (function () {
     };
     AdminComponent.prototype.logout = function () {
         var _this = this;
-        this.loginService.logout().subscribe(function (data) {
-            //successfully logged out.
-            //delete local storage
+        this.loginService.logout().subscribe(function (_) {
             _this.router.navigate(['/login']);
-        }, function (error) {
-            if (error) {
-                //some error happened.
-                _this.router.navigate(['/login']);
-            }
         });
     };
     AdminComponent.prototype.createUser = function () {
@@ -595,7 +588,7 @@ var AdminComponent = /** @class */ (function () {
         console.log(user);
         this.adminService.createUser(this.user._id, user).subscribe(function (data) {
             if (data) {
-                console.log("success" + data);
+                alert('create successfully');
             }
         }, function (err) {
             if (err) {
@@ -1146,7 +1139,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <!-- cards -->\n  <div class=\"form-inline mt-5\">\n    <div class=\"input-group\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Name</label>\n      </div>\n      <input [(ngModel)]=\"name\" placeholder=\"name\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Color</label>\n      </div>\n      <input [(ngModel)]=\"colors\" placeholder=\"color\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Type</label>\n      </div>\n      <input [(ngModel)]=\"type\" placeholder=\"type\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Set</label>\n      </div>\n      <input [(ngModel)]=\"set\" placeholder=\"set\" class=\"form-control\" />\n    </div>\n    <button class=\"btn btn-primary ml-3\" (click)=\"searchCards()\">Search</button>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-8\">\n      <table class=\"table table-striped mt-2 shadow\" *ngIf=\"visible\">\n        <thead class=\"table-secondary\">\n          <tr>\n            <th>Action</th>\n            <th>Name</th>\n            <th>Type</th>\n            <th>Colors</th>\n            <th>Set</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let card of cards\">\n            <td class=\"text-center\"><button class=\"btn btn-sm btn-secondary\" title=\"add to deck\"\n                (click)=\"toAdd = true;selectedCard = card ;selectedCardId = card.multiverseid \"> +\n              </button></td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.name}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.type}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.colors[0]}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.set}}</td>\n          </tr>\n        </tbody>\n      </table>\n      <div *ngIf=\"!visible\" class=\"text-center mt-4\">\n        <div class=\"spinner-grow text-info\" role=\"status\" style=\"width: 3rem; height: 3rem;\">\n          <span class=\"sr-only\">Loading...</span>\n        </div>\n      </div>\n      <div class=\"text-center\">\n        <a>1 2 3 4 ...</a>\n      </div>\n    </div>\n\n    <div class=\"col\">\n      <app-deck-list *ngIf=\"toAdd\" [selectedCard]=\"selectedCard\"></app-deck-list>\n      <app-card-detail *ngIf=\"selectedCardId\" [selectedCardId]=\"selectedCardId\"></app-card-detail>\n    </div>\n  </div>\n</div>\n<div style=\"height:200px;\"></div>"
+module.exports = "<div class=\"container\">\n  <!-- cards -->\n  <div class=\"form-inline mt-5\">\n    <div class=\"input-group\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Name</label>\n      </div>\n      <input [(ngModel)]=\"name\" placeholder=\"name\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Color</label>\n      </div>\n      <input [(ngModel)]=\"colors\" placeholder=\"color\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Type</label>\n      </div>\n      <input [(ngModel)]=\"type\" placeholder=\"type\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Set</label>\n      </div>\n      <input [(ngModel)]=\"set\" placeholder=\"set\" class=\"form-control\" />\n    </div>\n    <button class=\"btn btn-primary ml-3\" (click)=\"searchCards()\">Search</button>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-8\">\n      <table class=\"table table-striped mt-2 shadow\" *ngIf=\"visible\">\n        <thead class=\"table-secondary\">\n          <tr>\n            <th>Action</th>\n            <th>Name</th>\n            <th>Type</th>\n            <th>Colors</th>\n            <th>Set</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let card of cards\">\n            <td class=\"text-center\"><button class=\"btn btn-sm btn-secondary\" title=\"add to deck\"\n                (click)=\"toAdd = true;selectedCard = card ;selectedCardId = card.multiverseid \"> +\n              </button></td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.name}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.type}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.colors[0]}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.set}}</td>\n          </tr>\n        </tbody>\n      </table>\n      <div *ngIf=\"!visible\" class=\"text-center mt-4\">\n        <div class=\"spinner-grow text-info\" role=\"status\" style=\"width: 3rem; height: 3rem;\">\n          <span class=\"sr-only\">Loading...</span>\n        </div>\n      </div>\n      <div class=\" mt-2\">\n        <p class=\"float-left\">Page: {{page}}</p>\n        <div class=\"float-right\">\n          <button class=\"btn btn-sm btn-info\" *ngIf=\"page>1\" (click)=\"searchCards(page-1)\">Prev</button>\n          <button class=\"btn btn-sm btn-info ml-2\" (click)=\"searchCards(page+1)\">Next</button>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col\">\n      <app-deck-list *ngIf=\"toAdd\" [selectedCard]=\"selectedCard\"></app-deck-list>\n      <app-card-detail *ngIf=\"selectedCardId\" [selectedCardId]=\"selectedCardId\"></app-card-detail>\n    </div>\n  </div>\n</div>\n<div style=\"height:200px;\"></div>"
 
 /***/ }),
 
@@ -1204,8 +1197,10 @@ var UserCardsComponent = /** @class */ (function () {
             });
         }
     };
-    UserCardsComponent.prototype.searchCards = function () {
+    UserCardsComponent.prototype.searchCards = function (page) {
         var _this = this;
+        if (page)
+            this.page = page;
         this.visible = false;
         this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors, this.page).subscribe(function (data) {
             _this.cards = data;
