@@ -246,7 +246,10 @@ var UserService = /** @class */ (function () {
     };
     UserService.prototype.getCards = function (userId, name, type, set, color, page) {
         if (page === void 0) { page = 1; }
-        return this.http.get(rootURL + '/users/' + userId + '/cards?name=' + name + '&type=' + type + '&colors=' + color + '&set=' + set + '&page=' + page, this.httpOptions);
+        return this.http.get(rootURL + '/users/' + userId + '/cards?name=' + name + '&type=' + type + '&colors=' + color + '&set=' + set + '&page=' + page, {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() }),
+            observe: 'response',
+        });
     };
     UserService.prototype.getDecks = function (userId) {
         return this.http.get(rootURL + '/users/' + userId + '/decks', this.httpOptions);
@@ -577,24 +580,31 @@ var AdminComponent = /** @class */ (function () {
         });
     };
     AdminComponent.prototype.createUser = function () {
-        console.log('email ' + this.email + ',name: ' + this.firstname + this.lastname + ", password: " + this.password + ", role:" + this.selectedRole + ", enabled: " + this.enabled);
-        var user = new src_app_model_User__WEBPACK_IMPORTED_MODULE_4__["User"]();
-        user.email = this.email;
-        user.password = this.password;
-        user.enabled = this.enabled;
-        user.firstName = this.firstname;
-        user.lastName = this.lastname;
-        user.role = this.selectedRole;
-        console.log(user);
-        this.adminService.createUser(this.user._id, user).subscribe(function (data) {
-            if (data) {
-                alert('create successfully');
-            }
-        }, function (err) {
-            if (err) {
-                console.log('err:' + err);
-            }
-        });
+        var _this = this;
+        if (this.email && this.firstname && this.lastname && this.password && this.selectedRole) {
+            console.log('email ' + this.email + ',name: ' + this.firstname + this.lastname + ", password: " + this.password + ", role:" + this.selectedRole + ", enabled: " + this.enabled);
+            var user = new src_app_model_User__WEBPACK_IMPORTED_MODULE_4__["User"]();
+            user.email = this.email;
+            user.password = this.password;
+            user.enabled = this.enabled;
+            user.firstName = this.firstname;
+            user.lastName = this.lastname;
+            user.role = this.selectedRole;
+            console.log(user);
+            this.adminService.createUser(this.user._id, user).subscribe(function (data) {
+                if (data) {
+                    alert('create successfully');
+                    _this.router.navigate(['/admin']);
+                }
+            }, function (err) {
+                if (err) {
+                    alert(err.error.msg);
+                }
+            });
+        }
+        else {
+            alert('Please complete the form.');
+        }
     };
     AdminComponent.prototype.changeStatus = function (user, searchValue) {
         var _this = this;
@@ -980,7 +990,6 @@ var DeckListComponent = /** @class */ (function () {
         }
         //push data into this deck and update.
         currentDeck.cards.push(cardSummary);
-        console.log(currentDeck);
         this.userService.updateDeck(this.user._id, this.selectedDeckId, currentDeck).subscribe(function (deck) {
             _this.userService.getDecks(_this.user._id).subscribe(function (decks) { return _this.decks = decks; });
             _this.updateStatus();
@@ -990,6 +999,9 @@ var DeckListComponent = /** @class */ (function () {
     DeckListComponent.prototype.updateStatus = function () {
         // this.selectedDeckId;
         // this.selectedCard;
+        if (!this.selectedDeckId || !this.selectedCard) {
+            return;
+        }
         var selectedDeckCards = null;
         for (var i = 0; i < this.decks.length; i++) {
             if (this.decks[i].id == this.selectedDeckId) {
@@ -1095,7 +1107,7 @@ var LoginComponent = /** @class */ (function () {
             }
             _this.msg = 'incorrect email or password';
         }, function (err) {
-            _this.msg = 'incorrect email or password';
+            _this.msg = 'Incorrect user credencials';
         });
     };
     LoginComponent.prototype.hideMSG = function () {
@@ -1139,7 +1151,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <!-- cards -->\n  <div class=\"form-inline mt-5\">\n    <div class=\"input-group\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Name</label>\n      </div>\n      <input [(ngModel)]=\"name\" placeholder=\"name\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Color</label>\n      </div>\n      <input [(ngModel)]=\"colors\" placeholder=\"color\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Type</label>\n      </div>\n      <input [(ngModel)]=\"type\" placeholder=\"type\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Set</label>\n      </div>\n      <input [(ngModel)]=\"set\" placeholder=\"set\" class=\"form-control\" />\n    </div>\n    <button class=\"btn btn-primary ml-3\" (click)=\"searchCards()\">Search</button>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-8\">\n      <table class=\"table table-striped mt-2 shadow\" *ngIf=\"visible\">\n        <thead class=\"table-secondary\">\n          <tr>\n            <th>Action</th>\n            <th>Name</th>\n            <th>Type</th>\n            <th>Colors</th>\n            <th>Set</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let card of cards\">\n            <td class=\"text-center\"><button class=\"btn btn-sm btn-secondary\" title=\"add to deck\"\n                (click)=\"toAdd = true;selectedCard = card ;selectedCardId = card.multiverseid \"> +\n              </button></td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.name}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.type}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.colors[0]}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.set}}</td>\n          </tr>\n        </tbody>\n      </table>\n      <div *ngIf=\"!visible\" class=\"text-center mt-4\">\n        <div class=\"spinner-grow text-info\" role=\"status\" style=\"width: 3rem; height: 3rem;\">\n          <span class=\"sr-only\">Loading...</span>\n        </div>\n      </div>\n      <div class=\" mt-2\">\n        <p class=\"float-left\">Page: {{page}}</p>\n        <div class=\"float-right\">\n          <button class=\"btn btn-sm btn-info\" *ngIf=\"page>1\" (click)=\"searchCards(page-1)\">Prev</button>\n          <button class=\"btn btn-sm btn-info ml-2\" (click)=\"searchCards(page+1)\">Next</button>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col\">\n      <app-deck-list *ngIf=\"toAdd\" [selectedCard]=\"selectedCard\"></app-deck-list>\n      <app-card-detail *ngIf=\"selectedCardId\" [selectedCardId]=\"selectedCardId\"></app-card-detail>\n    </div>\n  </div>\n</div>\n<div style=\"height:200px;\"></div>"
+module.exports = "<div class=\"container\">\n  <!-- cards -->\n  <div class=\"form-inline mt-5\">\n    <div class=\"input-group\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Name</label>\n      </div>\n      <input [(ngModel)]=\"name\" placeholder=\"name\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Color</label>\n      </div>\n      <input [(ngModel)]=\"colors\" placeholder=\"color\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Type</label>\n      </div>\n      <input [(ngModel)]=\"type\" placeholder=\"type\" class=\"form-control\" />\n    </div>\n    <div class=\"input-group ml-1\">\n      <div class=\"input-group-prepend\">\n        <label class=\"input-group-text\">Set</label>\n      </div>\n      <input [(ngModel)]=\"set\" placeholder=\"set\" class=\"form-control\" />\n    </div>\n    <button class=\"btn btn-primary ml-3\" (click)=\"searchCards()\">Search</button>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-8\">\n      <table class=\"table table-striped mt-2 shadow\" *ngIf=\"visible\">\n        <thead class=\"table-secondary\">\n          <tr>\n            <th>Action</th>\n            <th>Name</th>\n            <th>Type</th>\n            <th>Colors</th>\n            <th>Set</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let card of cards\">\n            <td class=\"text-center\"><button class=\"btn btn-sm btn-secondary\" title=\"add to deck\"\n                (click)=\"toAdd = true;selectedCard = card ;selectedCardId = card.multiverseid \"> +\n              </button></td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.name}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.type}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.colors[0]}}</td>\n            <td (click)=\"selectedCardId = card.multiverseid; toAdd = false\">{{card.set}}</td>\n          </tr>\n        </tbody>\n      </table>\n      <div *ngIf=\"!visible\" class=\"text-center mt-4\">\n        <div class=\"spinner-grow text-info\" role=\"status\" style=\"width: 3rem; height: 3rem;\">\n          <span class=\"sr-only\">Loading...</span>\n        </div>\n      </div>\n      <div class=\" mt-2\" *ngIf=\"cards\">\n        <p class=\"float-left\">Page: {{page}} of {{totalPage}}</p>\n        <div class=\"float-right\">\n          <button class=\"btn btn-sm btn-info\" *ngIf=\"page>1\" (click)=\"searchCards(page-1)\">Prev</button>\n          <button class=\"btn btn-sm btn-info ml-2\" (click)=\"searchCards(page+1)\">Next</button>\n          <div class=\"btn-group ml-2\">\n            <div class=\"btn-group-prepend\">\n              <input class=\"form-control\" type=\"number\" style=\"width:80px\" #pageNum />\n            </div>\n            <button class=\"btn-sm btn-info btn\" (click)=\"searchCards(pageNum.value)\">Go</button>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col\">\n      <app-deck-list *ngIf=\"toAdd\" [selectedCard]=\"selectedCard\"></app-deck-list>\n      <app-card-detail *ngIf=\"selectedCardId\" [selectedCardId]=\"selectedCardId\"></app-card-detail>\n    </div>\n  </div>\n</div>\n<div style=\"height:200px;\"></div>"
 
 /***/ }),
 
@@ -1179,6 +1191,7 @@ var UserCardsComponent = /** @class */ (function () {
         this.visible = false;
         this.toAdd = false;
         this.selectedCard = null;
+        this.totalPage = null;
     }
     UserCardsComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -1191,19 +1204,27 @@ var UserCardsComponent = /** @class */ (function () {
             return;
         }
         if (this.user) {
-            this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors).subscribe(function (data) {
-                _this.cards = data;
+            this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors).subscribe(function (res) {
+                _this.cards = res.body;
+                _this.totalPage = res.headers.get('total-page');
                 _this.visible = true;
             });
         }
     };
     UserCardsComponent.prototype.searchCards = function (page) {
         var _this = this;
-        if (page)
+        if (page) {
+            page = parseInt(page + '');
+            if (page < 1 || page > this.totalPage) {
+                alert('invalid page number!' + this.totalPage);
+                return;
+            }
             this.page = page;
+        }
         this.visible = false;
-        this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors, this.page).subscribe(function (data) {
-            _this.cards = data;
+        this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors, this.page).subscribe(function (res) {
+            _this.cards = res.body;
+            _this.totalPage = res.headers.get('total-page');
             _this.visible = true;
         });
     };

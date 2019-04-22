@@ -56,11 +56,17 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <div class=" mt-2">
-        <p class="float-left">Page: {{page}}</p>
+      <div class=" mt-2" *ngIf="cards">
+        <p class="float-left">Page: {{page}} of {{totalPage}}</p>
         <div class="float-right">
           <button class="btn btn-sm btn-info" *ngIf="page>1" (click)="searchCards(page-1)">Prev</button>
           <button class="btn btn-sm btn-info ml-2" (click)="searchCards(page+1)">Next</button>
+          <div class="btn-group ml-2">
+            <div class="btn-group-prepend">
+              <input class="form-control" type="number" style="width:80px" #pageNum />
+            </div>
+            <button class="btn-sm btn-info btn" (click)="searchCards(pageNum.value)">Go</button>
+          </div>
         </div>
       </div>
     </div>

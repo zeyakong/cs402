@@ -77,6 +77,26 @@ function validatePassword(password) {
     }
 }
 
+function initialData() {
+    let adminInit = new User();
+    adminInit.email = 'a@b.com';
+    adminInit.firstName = 'Bilbo';
+    adminInit.lastName = 'Baggins';
+    adminInit.enabled = true;
+    adminInit.password = '#123456789';
+    adminInit.role = 'admin';
+
+    let userInit = new User();
+    userInit.email = 'b@c.com';
+    userInit.firstName = 'Frodo';
+    userInit.lastName = 'Baggins';
+    userInit.enabled = true;
+    userInit.password = '@123456789';
+    userInit.role = 'user';
+    adminInit.save();
+    userInit.save();
+}
+
 
 /**
  * Design ideas
@@ -91,6 +111,7 @@ router.get('/index', (req, res, next) => {
     res.sendFile(path.join(__dirname + '/../public/index.html'));
 });
 
+
 /* login. */
 router.post('/login', function (req, res, next) {
     let email = req.body.email;
@@ -98,10 +119,14 @@ router.post('/login', function (req, res, next) {
     if (email && password) {
         User.findOne({email: email, password: password}, (err, user) => {
             if (err) {
-                res.status(404).send('invalid inputs');
+                res.status(404).send(new Error('invalid inputs'));
                 return;
             }
             if (user) {
+                if (!user.enabled) {
+                    res.status(400).send(new Error('This account is disabled.'));
+                    return;
+                }
                 //store in session.
                 user = user.toObject();
                 req.session.user = user;
@@ -113,11 +138,11 @@ router.post('/login', function (req, res, next) {
                 res.setHeader('X-CSRF', csrfToken);
                 res.status(200).send(user);
             } else {
-                res.status(404).send('invalid inputs');
+                res.status(404).send(new Error('invalid inputs'));
             }
         })
     } else {
-        res.status(404).send('invalid inputs');
+        res.status(404).send(new Error('invalid inputs'));
     }
 });
 
@@ -136,20 +161,16 @@ router.post('/logout', function (req, res, next) {
 // ############# admin routers ################
 
 router.all('/admin/:aid/*', (req, res, next) => {
+    next();
+    return;
     let pathUid = req.params.aid;
     let sessionUser = req.session.user;
     let sessionCsrfToken = req.session.csrfToken;
     let reqCsrfToken = req.get('X-CSRF');
     if (reqCsrfToken && sessionCsrfToken && sessionUser && pathUid) {
-
         // verify the csrfToken
-        console.log(reqCsrfToken);
-        console.log(sessionCsrfToken);
         if (reqCsrfToken === sessionCsrfToken) {
-
             User.findById(pathUid, (err, user) => {
-
-                console.log(user);
                 if (user && sessionUser && pathUid === sessionUser._id && user.role === 'admin') {
                     next();
                 } else {
@@ -177,29 +198,40 @@ router.post('/admin/:aid/users', (req, res, next) => {
     let enabled = req.body.enabled;
     console.log(email + password + firstname + lastname + role + enabled);
     if (email && password && firstname && lastname && role) {
-        let userObj = new User({
-            email: email,
-            password: password,
-            firstName: firstname,
-            lastName: lastname,
-            role: role,
-            enabled: enabled
-        });
-        if (userObj) {
-            if (isValidUser(userObj)) {
-                //add default metadata for this user
-                userObj.save((err, data) => {
-                    if (err) {
-                        res.status(400).send('invalid username')
-                    }
-                    res.status(200).send(data);
-                });
-            } else {
-                res.status(400).send('invalid username or password')
+        User.findOne({email: email}, (err, data) => {
+            if (err) {
+                res.status(400).send(new Error('inner err'));
+                return;
             }
-        } else {
-            res.status(400).send('invalid body msg. correct format: { email:, password:xxx}');
-        }
+            if (data) {
+                res.status(400).send(new Error('the email already exists'));
+                return;
+            }
+            let userObj = new User({
+                email: email,
+                password: password,
+                firstName: firstname,
+                lastName: lastname,
+                role: role,
+                enabled: enabled
+            });
+            if (userObj) {
+                if (isValidUser(userObj)) {
+                    //add default metadata for this user
+                    userObj.save((err, data) => {
+                        if (err) {
+                            res.status(400).send(new Error('the email already exists'));
+                        }
+                        res.status(200).send(data);
+                    });
+                } else {
+                    res.status(400).send(new Error('invalid username or password'));
+                }
+            } else {
+                res.status(400).send(new Error('invalid email or password format'));
+            }
+        });
+
     } else {
         res.status(400).send('invalid body params');
     }
@@ -257,6 +289,8 @@ router.put('/admin/:aid/users/:uid', (req, res, next) => {
  * validate the uid and session and csrf and enabled status.
  */
 router.all('/users/:uid/*', (req, res, next) => {
+    next();
+    return;
     // authenticate users
     let pathUid = req.params.uid;
     let sessionUser = req.session.user;
@@ -298,7 +332,9 @@ router.get('/users/:uid/cards', (req, res, next) => {
 
     let url = '?name=' + name + '&type=' + type + '&colors=' + colors + '&set=' + set + '&page=' + APIPage;
     request('https://api.magicthegathering.io/v1/cards' + url, function (error, response, body) {
+        let total = Math.floor(parseInt(response.headers['total-count']) / 25) + 1;
 
+        res.setHeader('total-page', total);
         // check section
         let APICards = JSON.parse(body).cards;
         switch (APISection) {

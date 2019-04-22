@@ -19,6 +19,7 @@ export class UserCardsComponent implements OnInit {
   visible: boolean = false;
   toAdd: boolean = false;
   selectedCard: Card = null;
+  totalPage = null;
 
   constructor(
     private userService: UserService,
@@ -37,18 +38,27 @@ export class UserCardsComponent implements OnInit {
     }
 
     if (this.user) {
-      this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors).subscribe(data => {
-        this.cards = data;
+      this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors).subscribe(res => {
+        this.cards = res.body;
+        this.totalPage = res.headers.get('total-page');
         this.visible = true;
       });
     }
   }
 
   searchCards(page: number) {
-    if (page) this.page = page;
+    if (page) {
+      page = parseInt(page + '');
+      if (page < 1 || page > this.totalPage) {
+        alert('invalid page number!' + this.totalPage);
+        return;
+      }
+      this.page = page;
+    }
     this.visible = false;
-    this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors, this.page).subscribe(data => {
-      this.cards = data;
+    this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors, this.page).subscribe(res => {
+      this.cards = res.body;
+      this.totalPage = res.headers.get('total-page');
       this.visible = true;
     });
   }

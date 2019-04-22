@@ -24,13 +24,15 @@ export class UserService {
     };
   }
 
-
   getCardById(userId: string, id: string): Observable<Card> {
     return this.http.get<Card>(rootURL + '/users/' + userId + '/cards/' + id, this.httpOptions);
   }
 
-  getCards(userId: string, name: string, type: string, set: string, color: string, page: number = 1): Observable<Card[]> {
-    return this.http.get<Card[]>(rootURL + '/users/' + userId + '/cards?name=' + name + '&type=' + type + '&colors=' + color + '&set=' + set + '&page=' + page, this.httpOptions);
+  getCards(userId: string, name: string, type: string, set: string, color: string, page: number = 1) {
+    return this.http.get<Card[]>(rootURL + '/users/' + userId + '/cards?name=' + name + '&type=' + type + '&colors=' + color + '&set=' + set + '&page=' + page, {
+      headers: new HttpHeaders({ 'X-CSRF': this.loginService.getCSRFToken() }),
+      observe: 'response',
+    });
   }
 
   getDecks(userId: string): Observable<Deck[]> {
