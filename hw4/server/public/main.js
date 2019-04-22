@@ -128,11 +128,11 @@ var AdminService = /** @class */ (function () {
     function AdminService(http, loginService) {
         this.http = http;
         this.loginService = loginService;
+    }
+    AdminService.prototype.createUser = function (adminId, user) {
         this.httpOptions = {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
         };
-    }
-    AdminService.prototype.createUser = function (adminId, user) {
         return this.http.post(rootURL + '/admin/' + adminId + '/users', user, this.httpOptions);
     };
     AdminService.prototype.getUsers = function (adminId, term) {
@@ -140,9 +140,15 @@ var AdminService = /** @class */ (function () {
             // if not search term, return empty hero array.
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])([]);
         }
+        this.httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
+        };
         return this.http.get(rootURL + '/admin/' + adminId + '/users' + '/?keywords=' + term, this.httpOptions);
     };
     AdminService.prototype.updateUser = function (adminId, userId, enabled) {
+        this.httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
+        };
         return this.http.put(rootURL + '/admin/' + adminId + '/users/' + userId, { enabled: enabled }, this.httpOptions);
     };
     AdminService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -237,36 +243,54 @@ var UserService = /** @class */ (function () {
     function UserService(http, loginService) {
         this.http = http;
         this.loginService = loginService;
+    }
+    UserService.prototype.getCardById = function (userId, id) {
         this.httpOptions = {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
         };
-    }
-    UserService.prototype.getCardById = function (userId, id) {
         return this.http.get(rootURL + '/users/' + userId + '/cards/' + id, this.httpOptions);
     };
     UserService.prototype.getCards = function (userId, name, type, set, color, page) {
         if (page === void 0) { page = 1; }
+        this.httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
+        };
         return this.http.get(rootURL + '/users/' + userId + '/cards?name=' + name + '&type=' + type + '&colors=' + color + '&set=' + set + '&page=' + page, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() }),
             observe: 'response',
         });
     };
     UserService.prototype.getDecks = function (userId) {
+        this.httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
+        };
         return this.http.get(rootURL + '/users/' + userId + '/decks', this.httpOptions);
     };
     UserService.prototype.createDeck = function (userId, deckName, description) {
+        this.httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
+        };
         var deck = new _model_Deck__WEBPACK_IMPORTED_MODULE_3__["Deck"]();
         deck.name = deckName;
         deck.description = description;
         return this.http.post(rootURL + '/users/' + userId + '/decks', deck, this.httpOptions);
     };
     UserService.prototype.deleteDeck = function (userId, deckId) {
+        this.httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
+        };
         return this.http.delete(rootURL + '/users/' + userId + '/decks/' + deckId, this.httpOptions);
     };
     UserService.prototype.getADeck = function (userId, deckId) {
+        this.httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
+        };
         return this.http.get(rootURL + '/users/' + userId + '/decks/' + deckId, this.httpOptions);
     };
     UserService.prototype.updateDeck = function (userId, deckId, deck) {
+        this.httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
+        };
         return this.http.put(rootURL + '/users/' + userId + '/decks/' + deckId, { 'deck': deck }, this.httpOptions);
     };
     UserService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -582,7 +606,6 @@ var AdminComponent = /** @class */ (function () {
     AdminComponent.prototype.createUser = function () {
         var _this = this;
         if (this.email && this.firstname && this.lastname && this.password && this.selectedRole) {
-            console.log('email ' + this.email + ',name: ' + this.firstname + this.lastname + ", password: " + this.password + ", role:" + this.selectedRole + ", enabled: " + this.enabled);
             var user = new src_app_model_User__WEBPACK_IMPORTED_MODULE_4__["User"]();
             user.email = this.email;
             user.password = this.password;
@@ -590,11 +613,15 @@ var AdminComponent = /** @class */ (function () {
             user.firstName = this.firstname;
             user.lastName = this.lastname;
             user.role = this.selectedRole;
-            console.log(user);
             this.adminService.createUser(this.user._id, user).subscribe(function (data) {
                 if (data) {
                     alert('create successfully');
-                    _this.router.navigate(['/admin']);
+                    _this.email = '';
+                    _this.password = '';
+                    _this.enabled = false;
+                    _this.firstname = '';
+                    _this.lastname = '';
+                    _this.selectedRole = '';
                 }
             }, function (err) {
                 if (err) {

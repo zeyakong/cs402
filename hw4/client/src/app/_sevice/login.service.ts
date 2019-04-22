@@ -6,7 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { User } from '../_model/User';
 import { Router } from '@angular/router';
 
-const rootURL = 'http://localhost:3000/api/v1';
+const rootURL = 'http://138.49.184.168:3000/api/v1';
 
 
 @Injectable({

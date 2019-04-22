@@ -66,7 +66,6 @@ export class AdminComponent implements OnInit {
 
   createUser() {
     if (this.email && this.firstname && this.lastname && this.password && this.selectedRole) {
-      console.log('email ' + this.email + ',name: ' + this.firstname + this.lastname + ", password: " + this.password + ", role:" + this.selectedRole + ", enabled: " + this.enabled)
       let user: User = new User();
       user.email = this.email;
       user.password = this.password;
@@ -74,13 +73,17 @@ export class AdminComponent implements OnInit {
       user.firstName = this.firstname;
       user.lastName = this.lastname;
       user.role = this.selectedRole;
-      console.log(user);
 
       this.adminService.createUser(this.user._id, user).subscribe(
         data => {
           if (data) {
             alert('create successfully');
-            this.router.navigate(['/admin']);
+            this.email = '';
+            this.password = '';
+            this.enabled = false;
+            this.firstname = '';
+            this.lastname = '';
+            this.selectedRole = '';
           }
         },
         err => {
