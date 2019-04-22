@@ -25,9 +25,10 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.loginService.login(this.email, this.password).subscribe(
-      user => {
+      res => {
+        let user = res.body;
+        this.loginService.setCSRFToken(res.headers.get('X-CSRF'));
         if (user) {
-          // this.globals.user = user;
           this.loginService.setUser(user);
           if (user.role == 'admin') {
             this.router.navigate(['/admin']);

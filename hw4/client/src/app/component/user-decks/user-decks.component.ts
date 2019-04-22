@@ -22,8 +22,9 @@ export class UserDecksComponent implements OnInit {
     private router: Router,
     private loginService: LoginService
   ) {
-    if (this.loginService.getUser()) {
-      this.user = this.loginService.getUser();
+    let user : User= this.loginService.getUser();
+    if (user && user.role == 'user') {
+      this.user = user;
     } else {
       this.router.navigate(['/login']);
       return;

@@ -56,8 +56,12 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <div class="text-center">
-        <a>1 2 3 4 ...</a>
+      <div class=" mt-2">
+        <p class="float-left">Page: {{page}}</p>
+        <div class="float-right">
+          <button class="btn btn-sm btn-info" *ngIf="page>1" (click)="searchCards(page-1)">Prev</button>
+          <button class="btn btn-sm btn-info ml-2" (click)="searchCards(page+1)">Next</button>
+        </div>
       </div>
     </div>
 
@@ -66,5 +70,6 @@
       <app-card-detail *ngIf="selectedCardId" [selectedCardId]="selectedCardId"></app-card-detail>
     </div>
   </div>
+  
 </div>
 <div style="height:200px;"></div>

@@ -25,8 +25,9 @@ export class DeckListComponent implements OnInit {
     private loginService: LoginService,
     private router: Router
   ) {
-    if (this.loginService.getUser()) {
-      this.user = this.loginService.getUser();
+    let user : User= this.loginService.getUser();
+    if (user && user.role == 'user') {
+      this.user = user;
     } else {
       this.router.navigate(['/login']);
       return;

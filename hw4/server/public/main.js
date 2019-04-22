@@ -124,9 +124,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var rootURL = 'http://localhost:3000/api/v1';
-var httpOptions = {
-    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'application/json' })
-};
 var AdminService = /** @class */ (function () {
     function AdminService(http, loginService) {
         this.http = http;
@@ -136,17 +133,17 @@ var AdminService = /** @class */ (function () {
         };
     }
     AdminService.prototype.createUser = function (adminId, user) {
-        return this.http.post(rootURL + '/admin/' + adminId + '/users', user, httpOptions);
+        return this.http.post(rootURL + '/admin/' + adminId + '/users', user, this.httpOptions);
     };
     AdminService.prototype.getUsers = function (adminId, term) {
         if (!term.trim()) {
             // if not search term, return empty hero array.
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])([]);
         }
-        return this.http.get(rootURL + '/admin/' + adminId + '/users' + '/?keywords=' + term, httpOptions);
+        return this.http.get(rootURL + '/admin/' + adminId + '/users' + '/?keywords=' + term, this.httpOptions);
     };
     AdminService.prototype.updateUser = function (adminId, userId, enabled) {
-        return this.http.put(rootURL + '/admin/' + adminId + '/users/' + userId, { enabled: enabled }, httpOptions);
+        return this.http.put(rootURL + '/admin/' + adminId + '/users/' + userId, { enabled: enabled }, this.httpOptions);
     };
     AdminService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -236,42 +233,38 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var rootURL = 'http://localhost:3000/api/v1';
-var httpOptions = {
-    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'application/json' })
-};
 var UserService = /** @class */ (function () {
     function UserService(http, loginService) {
         this.http = http;
         this.loginService = loginService;
-        console.log(this.loginService.getCSRFToken());
         this.httpOptions = {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'X-CSRF': this.loginService.getCSRFToken() })
         };
     }
     UserService.prototype.getCardById = function (userId, id) {
-        return this.http.get(rootURL + '/users/' + userId + '/cards/' + id, httpOptions);
+        return this.http.get(rootURL + '/users/' + userId + '/cards/' + id, this.httpOptions);
     };
     UserService.prototype.getCards = function (userId, name, type, set, color, page) {
         if (page === void 0) { page = 1; }
-        return this.http.get(rootURL + '/users/' + userId + '/cards?name=' + name + '&type=' + type + '&colors=' + color + '&set=' + set + '&page=' + page, httpOptions);
+        return this.http.get(rootURL + '/users/' + userId + '/cards?name=' + name + '&type=' + type + '&colors=' + color + '&set=' + set + '&page=' + page, this.httpOptions);
     };
     UserService.prototype.getDecks = function (userId) {
-        return this.http.get(rootURL + '/users/' + userId + '/decks', httpOptions);
+        return this.http.get(rootURL + '/users/' + userId + '/decks', this.httpOptions);
     };
     UserService.prototype.createDeck = function (userId, deckName, description) {
         var deck = new _model_Deck__WEBPACK_IMPORTED_MODULE_3__["Deck"]();
         deck.name = deckName;
         deck.description = description;
-        return this.http.post(rootURL + '/users/' + userId + '/decks', deck, httpOptions);
+        return this.http.post(rootURL + '/users/' + userId + '/decks', deck, this.httpOptions);
     };
     UserService.prototype.deleteDeck = function (userId, deckId) {
-        return this.http.delete(rootURL + '/users/' + userId + '/decks/' + deckId, httpOptions);
+        return this.http.delete(rootURL + '/users/' + userId + '/decks/' + deckId, this.httpOptions);
     };
     UserService.prototype.getADeck = function (userId, deckId) {
-        return this.http.get(rootURL + '/users/' + userId + '/decks/' + deckId, httpOptions);
+        return this.http.get(rootURL + '/users/' + userId + '/decks/' + deckId, this.httpOptions);
     };
     UserService.prototype.updateDeck = function (userId, deckId, deck) {
-        return this.http.put(rootURL + '/users/' + userId + '/decks/' + deckId, { 'deck': deck }, httpOptions);
+        return this.http.put(rootURL + '/users/' + userId + '/decks/' + deckId, { 'deck': deck }, this.httpOptions);
     };
     UserService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({

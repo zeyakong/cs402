@@ -44,6 +44,10 @@ function cleanCards(cards) {
     return cards;
 }
 
+function Error(msg) {
+    this.msg = msg;
+}
+
 
 //##########################fuctions########
 function isValidUser(user) {
@@ -91,7 +95,6 @@ router.get('/index', (req, res, next) => {
 router.post('/login', function (req, res, next) {
     let email = req.body.email;
     let password = req.body.password;
-    console.log(email + password);
     if (email && password) {
         User.findOne({email: email, password: password}, (err, user) => {
             if (err) {
@@ -103,6 +106,11 @@ router.post('/login', function (req, res, next) {
                 user = user.toObject();
                 req.session.user = user;
                 delete user['password'];
+                //add csrfToken
+                let csrfToken = uuid.v4();
+                //store the csrfToken into session
+                req.session.csrfToken = csrfToken;
+                res.setHeader('X-CSRF', csrfToken);
                 res.status(200).send(user);
             } else {
                 res.status(404).send('invalid inputs');
@@ -129,8 +137,29 @@ router.post('/logout', function (req, res, next) {
 
 router.all('/admin/:aid/*', (req, res, next) => {
     next();
+    return;
+    let pathUid = req.params.uid;
+    let sessionUser = req.session.user;
+    let sessionCsrfToken = req.session.csrfToken;
+    let reqCsrfToken = req.get('X-CSRF');
+    if (reqCsrfToken && sessionCsrfToken && sessionUser && pathUid) {
+        // verify the csrfToken
+        if (reqCsrfToken === sessionCsrfToken) {
+            //verify the user
+            User.findById(pathUid, (err, user) => {
+                if (user && sessionUser && pathUid === sessionUser._id && user.role === 'admin') {
+                    next();
+                } else {
+                    res.status(403).send(new Error('the request is not authentication.'));
+                }
+            })
+        } else {
+            res.status(403).send(new Error('the request is not authenticated.'))
+        }
+    } else {
+        res.status(403).send(new Error('the request is not authenticated.'))
+    }
 });
-
 
 /**
  * admin add a new user
@@ -201,24 +230,20 @@ router.get('/admin/:aid/users', (req, res, next) => {
  * admin update users
  * This application only allows an admin to enable/ disable a user
  */
-router.put('/admin/:aid/users', (req, res, next) => {
-    if (req.body.enabled) {
-        let enabled = req.body.enabled;
-        //update the user
-        let uid = req.params.uid;
-        User.findById(uid, (err, user) => {
-            if (err || !user) {
-                res.status(404).send('invalid uid');
-                return;
-            }
-            user.enabled = enabled;
-            user.save((err, user) => {
-                res.send(user);
-            });
+router.put('/admin/:aid/users/:uid', (req, res, next) => {
+    let enabled = req.body.enabled;
+    //update the user
+    let uid = req.params.uid;
+    User.findById(uid, (err, user) => {
+        if (err) {
+            res.status(404).send(err);
+            return;
+        }
+        user.enabled = enabled;
+        user.save((err, user) => {
+            res.send(user);
         });
-    } else {
-        res.status('403').send('invalid request')
-    }
+    });
 });
 
 
@@ -229,7 +254,30 @@ router.put('/admin/:aid/users', (req, res, next) => {
  * validate the uid and session and csrf and enabled status.
  */
 router.all('/users/:uid/*', (req, res, next) => {
-    next()
+    next();
+    return;
+    // authenticate users
+    let pathUid = req.params.uid;
+    let sessionUser = req.session.user;
+    let sessionCsrfToken = req.session.csrfToken;
+    let reqCsrfToken = req.get('X-CSRF');
+    if (reqCsrfToken && sessionCsrfToken && sessionUser && pathUid) {
+        // verify the csrfToken
+        if (reqCsrfToken === sessionCsrfToken) {
+            //verify the user
+            User.findById(pathUid, (err, user) => {
+                if (user && sessionUser && pathUid === sessionUser._id && user.role === 'user') {
+                    next();
+                } else {
+                    res.status(403).send(new Error('the request is not authentication.'));
+                }
+            })
+        } else {
+            res.status(403).send(new Error('the request is not authenticated.'))
+        }
+    } else {
+        res.status(403).send(new Error('the request is not authenticated.'))
+    }
 });
 
 /**
@@ -249,6 +297,7 @@ router.get('/users/:uid/cards', (req, res, next) => {
 
     let url = '?name=' + name + '&type=' + type + '&colors=' + colors + '&set=' + set + '&page=' + APIPage;
     request('https://api.magicthegathering.io/v1/cards' + url, function (error, response, body) {
+
         // check section
         let APICards = JSON.parse(body).cards;
         switch (APISection) {
@@ -382,7 +431,7 @@ router.put('/users/:uid/decks/:did', (req, res, next) => {
             }
         }
         user.decks = decks;
-        user.save().then(_=>{
+        user.save().then(_ => {
             res.json('ok');
         });
     });

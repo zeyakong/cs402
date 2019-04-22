@@ -7,9 +7,7 @@ import { User } from '../_model/User';
 import { Router } from '@angular/router';
 
 const rootURL = 'http://localhost:3000/api/v1';
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +19,8 @@ export class LoginService {
     private http: HttpClient,
   ) { }
 
-  login(email: string, password: string): Observable<User> {
-    return this.http.post<User>(rootURL + '/login', { email: email, password: password }, httpOptions);
+  login(email: string, password: string) {
+    return this.http.post<User>(rootURL + '/login', { email: email, password: password }, {observe: 'response'});
   }
 
   logout() {
@@ -32,6 +30,14 @@ export class LoginService {
 
   setUser(user: User) {
     localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  setCSRFToken(csrf: string) {
+    localStorage.setItem('csrf-token', csrf);
+  }
+
+  getCSRFToken() {
+    return localStorage.getItem('csrf-token');
   }
 
   getUser() {

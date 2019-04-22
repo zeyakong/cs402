@@ -28,8 +28,9 @@ export class UserCardsComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.loginService.getUser()) {
-      this.user = this.loginService.getUser();
+    let user: User = this.loginService.getUser();
+    if (user && user.role == 'user') {
+      this.user = user;
     } else {
       this.router.navigate(['/login']);
       return;
@@ -43,7 +44,8 @@ export class UserCardsComponent implements OnInit {
     }
   }
 
-  searchCards() {
+  searchCards(page: number) {
+    if (page) this.page = page;
     this.visible = false;
     this.userService.getCards(this.user._id, this.name, this.type, this.set, this.colors, this.page).subscribe(data => {
       this.cards = data;

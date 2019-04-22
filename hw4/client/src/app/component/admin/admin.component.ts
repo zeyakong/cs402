@@ -3,10 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { LoginService } from 'src/app/_sevice/login.service';
 import { User } from 'src/app/_model/User';
 import { AdminService } from '../../_sevice/admin.service'
-import { Subject, Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-
-
+import { Subject, Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, filter, map } from 'rxjs/operators';
 
 
 @Component({
@@ -14,10 +12,11 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
+
 export class AdminComponent implements OnInit {
   users$: Observable<User[]>;
   private searchTerms = new Subject<string>();
-  @Input() email: string; firstname: string; password: string; lastname: string; selectedRole: string; enabled: boolean = false;
+  @Input() email: string; firstname: string; password: string; lastname: string; selectedRole: string; enabled: boolean = false; statusValue: string = 'true'; roleValue: string = 'user';
   user: User;
 
   // Push a search term into the observable stream.
@@ -30,8 +29,9 @@ export class AdminComponent implements OnInit {
     private router: Router,
     private adminService: AdminService,
   ) {
-    if (this.loginService.getUser()) {
-      this.user = this.loginService.getUser();
+    let user : User= this.loginService.getUser();
+    if (user && user.role == 'admin') {
+      this.user = user;
     } else {
       this.router.navigate(['/login']);
       return;
@@ -39,15 +39,22 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.users$ = this.searchTerms.pipe(
       // wait 300ms after each keystroke before considering the term
       debounceTime(300),
 
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
+      // // ignore new term if same as previous term
+      // distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.adminService.getUsers(this.user._id, term)),
+      switchMap((term: string) => this.adminService.getUsers(this.user._id, term).pipe(
+        map(arr =>
+          arr.filter(user => {
+            return user.role == this.roleValue && user.enabled == (this.statusValue == 'true');
+          })
+        )
+      )),
     );
   }
 
@@ -88,5 +95,12 @@ export class AdminComponent implements OnInit {
           console.log('err:' + err)
         }
       });
+  }
+
+  changeStatus(user: User, searchValue: string) {
+    let newStatus = !user.enabled;
+    this.adminService.updateUser(this.user._id, user._id, newStatus).subscribe(user => {
+      this.search(searchValue);
+    });
   }
 }
