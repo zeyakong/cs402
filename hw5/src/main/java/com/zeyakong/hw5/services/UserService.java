@@ -15,74 +15,74 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements UserDetailsService {
-	@Autowired
-	private UserRepository userRepository;
-	
-	public User findById(String uid  ) {
-		return userRepository.findById( uid ).orElse(null);
-	}
-	
-	public User save( User user ) {
-		return this.userRepository.save( user );
-	}
+    @Autowired
+    private UserRepository userRepository;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = this.userRepository.findByUsername(username);
-		
-		if( user == null ) {
-			throw new UsernameNotFoundException("No such username");
-		}
-		
-		@SuppressWarnings("serial")
-		UserDetails ud = new UserDetails() {
-			@Override
-			public Collection<? extends GrantedAuthority> getAuthorities() {
-				return Arrays.asList(
-						new SimpleGrantedAuthority("USER")
-				);
-			}
+    public User findById(String uid) {
+        return userRepository.findById(uid).orElse(null);
+    }
 
-			@Override
-			public String getPassword() {
-				return user.getPassword();
-			}
+    public User save(User user) {
+        return this.userRepository.save(user);
+    }
 
-			@Override
-			public String getUsername() {
-				return user.getUsername();
-			}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = this.userRepository.findByUsername(username);
 
-			@Override
-			public boolean isAccountNonExpired() {
-				return true;
-			}
+        if (user == null) {
+            throw new UsernameNotFoundException("No such username");
+        }
 
-			@Override
-			public boolean isAccountNonLocked() {
-				return true;
-			}
+        @SuppressWarnings("serial")
+        UserDetails ud = new UserDetails() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return Arrays.asList(
+                        new SimpleGrantedAuthority("USER")
+                );
+            }
 
-			@Override
-			public boolean isCredentialsNonExpired() {
-				return true;
-			}
+            @Override
+            public String getPassword() {
+                return user.getPassword();
+            }
 
-			@Override
-			public boolean isEnabled() {
-				return true;
-			}			
-		};
-		
-		return ud;
-	}
+            @Override
+            public String getUsername() {
+                return user.getUsername();
+            }
 
-	public void deleteAll() {
-		this.userRepository.deleteAll();
-	}
+            @Override
+            public boolean isAccountNonExpired() {
+                return true;
+            }
 
-	public User findByUsername(String username) {
-		return this.userRepository.findByUsername(username);
-	}
-	
+            @Override
+            public boolean isAccountNonLocked() {
+                return true;
+            }
+
+            @Override
+            public boolean isCredentialsNonExpired() {
+                return true;
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return true;
+            }
+        };
+
+        return ud;
+    }
+
+    public void deleteAll() {
+        this.userRepository.deleteAll();
+    }
+
+    public User findByUsername(String username) {
+        return this.userRepository.findByUsername(username);
+    }
+
 }
