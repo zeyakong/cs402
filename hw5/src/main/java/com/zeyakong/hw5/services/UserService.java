@@ -31,6 +31,7 @@ public class UserService implements UserDetailsService {
         User user = this.userRepository.findByUsername(username);
 
         if (user == null) {
+            System.out.println("null user");
             throw new UsernameNotFoundException("No such username");
         }
 
