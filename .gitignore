@@ -51,3 +51,9 @@ hw3/.idea/
 hw4/server/.idea/
 hw4/server/node_modules/
 hw4/client/node_modules/
+example/
+.mvn
+hw5/mvnw.cmd
+hw5/mvnw
+
+hw5/src/main/java/META-INF/MANIFEST.MF
