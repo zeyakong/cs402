@@ -9,10 +9,13 @@
     <div class="console form-inline row">
         <div class="col-11">
             <div th:if="${list}">
-                <select class="custom-select">
-                    <option th:each="w : ${list}" th:value="${w.name}" th:text="${w.name}">one</option>
-                </select>
-                <button class="btn btn-primary ml-4">Update</button>
+                <form method="post" th:action="@{/updateWeather}">
+                    <select class="custom-select" name="weatherId">
+                        <option th:each="w : ${list}" th:value="${w.id}" th:text="${w.name}" th:selected="${w.id == currentWeather.id}">one</option>
+                    </select>
+                    <input type="hidden" th:value="${_csrf.token}" th:name="${_csrf.parameterName}">
+                    <button class="btn btn-primary ml-4" type="submit">Update</button>
+                </form>
             </div>
         </div>
         <div class="float-right col">

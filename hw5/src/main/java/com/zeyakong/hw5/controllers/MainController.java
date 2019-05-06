@@ -103,4 +103,18 @@ public class MainController {
         }
     }
 
+    @RequestMapping(value = "/updateWeather",method = RequestMethod.POST)
+    public void updateWeather(
+            @RequestParam(value = "weatherId") String id,
+            HttpServletResponse resp
+    ){
+        //update weather object.
+        weatherService.updateWeather(weatherService.findById(id));
+        try {
+            resp.sendRedirect("/home"+"?location=" + id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
