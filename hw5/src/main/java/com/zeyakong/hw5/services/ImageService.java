@@ -25,8 +25,8 @@ public class ImageService {
 	
 	public void save(MultipartFile file, String uid) throws IllegalStateException, IOException {
 		if (file != null ) {
-			if (!file.getOriginalFilename().equals("")) {				
-				file.transferTo(getPath(uid));				
+			if (!file.getOriginalFilename().equals("")) {
+				file.transferTo(getPath(uid));
 			}
 		}  else {
 			throw new IllegalStateException("No data given:" + file);

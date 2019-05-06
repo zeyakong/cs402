@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WeatherService {
@@ -45,7 +46,6 @@ public class WeatherService {
     }
 
     public void saveWeather(Weather weather) {
-        System.out.println(weather.getLan()+"...."+weather.getLon());
         Weather w = weatherRepository.findByLanAndLon(weather.getLan(), weather.getLon());
         if (w == null)
             weatherRepository.save(weather);
@@ -55,7 +55,16 @@ public class WeatherService {
         return weatherRepository.findAll();
     }
 
-    public void updateWeather() {
+    public void updateWeather(Weather weather) {
+        Weather nw = getWeatherObject(weather.getLan(), weather.getLon());
+        Weather w = weatherRepository.findById(weather.getId()).get();
+        w.setTemperature(nw.getTemperature());
+        w.setWeather(nw.getWeather());
+        w.setWeatherImg(nw.getWeatherImg());
+        weatherRepository.save(w);
+    }
 
+    public Weather findById(String id){
+        return weatherRepository.findById(id).get();
     }
 }

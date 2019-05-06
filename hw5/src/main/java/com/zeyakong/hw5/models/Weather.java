@@ -145,12 +145,15 @@ public class Weather {
 
     @Override
     public String toString() {
-        return "Builder{" +
-                "name='" + name + '\'' +
+        return "Weather{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", areaDescription='" + areaDescription + '\'' +
                 ", temperature='" + temperature + '\'' +
                 ", weather='" + weather + '\'' +
                 ", weatherImg='" + weatherImg + '\'' +
+                ", lan='" + lan + '\'' +
+                ", lon='" + lon + '\'' +
                 '}';
     }
 }

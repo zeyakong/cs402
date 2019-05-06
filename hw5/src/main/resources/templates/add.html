@@ -43,6 +43,8 @@
             <input type="hidden" th:field="*{areaDescription}">
             <input type="hidden" th:field="*{weatherImg}">
             <input type="hidden" th:field="*{temperature}">
+            <input type="hidden" th:field="*{lon}">
+            <input type="hidden" th:field="*{lan}">
             <input type="hidden" th:value="${_csrf.token}" th:name="${_csrf.parameterName}">
             <button class="btn btn-primary form-control mt-3 text-center" style="width: 94%" type="submit">Add Location</button>
         </form>
