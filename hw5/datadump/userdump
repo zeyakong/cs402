@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5ccfaf84ebb9d754c28b20b9"},"email":"jim@ebox.edu","username":"jim","password":"$2a$10$Cr4.7Mjc3/WP8dyiKhj9S.pC6iTrJ64ua5UTEY3we4D4Os9slDSA6","_class":"com.zeyakong.hw5.models.User"}
+{"_id":{"$oid":"5ccfaf84ebb9d754c28b20ba"},"email":"jill@ebox.edu","username":"jill","password":"$2a$10$PnYHH23vq3HgVUkhswtSTeF54j5A97cC0mqxLLC.b9q5biDsWdYV2","_class":"com.zeyakong.hw5.models.User"}
