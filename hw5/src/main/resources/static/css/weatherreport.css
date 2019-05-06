@@ -74,11 +74,10 @@ input {
 .user_card {
 	height: 300px;
 	width: 350px;
-	margin-top: 125px;
+	margin-top: 150px;
 	margin-bottom: auto;
 	background: #48d;
 	position: relative;
-	float: right;
 	padding: 10px;
 	border-radius: 5px;
 }
@@ -133,7 +132,7 @@ div.footer {
 }
 
 .login_container {
-	padding: 0 2rem;
+	padding: 0 0;
 }
 
 .input-group-text {
@@ -151,4 +150,13 @@ div.footer {
 .custom-checkbox .custom-control-input:checked ~.custom-control-label::before
 	{
 	background-color: #2b5fc0 !important;
+}
+
+.shadow {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.console{
+	background-color: lightgray;
+	height: 70px;
 }

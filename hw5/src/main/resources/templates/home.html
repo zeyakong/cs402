@@ -6,7 +6,36 @@
 <div th:replace="user_header"></div>
 
 <div class="container">
-    <h1>this is the main page</h1>
+    <div class="console form-inline row">
+        <div class="col-11">
+            <div th:if="${list}">
+                <select class="custom-select">
+                    <option th:each="w : ${list}" th:value="${w.name}" th:text="${w.name}">one</option>
+                </select>
+                <button class="btn btn-primary ml-4">Update</button>
+            </div>
+        </div>
+        <div class="float-right col">
+            <a class="btn btn-primary" th:href="@{/add}"> + </a>
+        </div>
+    </div>
+
+    <div th:if="${currentWeather}">
+        <div class="card mt-5">
+            <div class="card-body">
+                <div class="float-left">
+                    <div th:text="${currentWeather.name}" class="forecast-name"></div>
+                    <span th:text="${currentWeather.areaDescription}" class="forecast-description"></span>
+                    <br>
+                    <span th:text="${currentWeather.temperature}+ ' degree and '+${currentWeather.weather}"></span>
+                </div>
+                <div class="float-right">
+                    <img th:src="${currentWeather.weatherImg}" class="weather-image"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div th:replace="footer"></div>

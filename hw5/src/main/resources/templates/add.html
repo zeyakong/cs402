@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="head.html"></div>
+<body>
+<div class="background-image blurred"></div>
+<div th:replace="user_header"></div>
+
+<div class="container">
+    <h1>Location Management</h1>
+    <div class="card">
+        <form class="card-body" method="get" action="/add">
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" name="lat" placeholder="Latitude">
+                </div>
+                <div class="col">
+                    <input class="form-control" name="lon" placeholder="Longitude">
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Lookup</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${weatherObj}">
+        <div class="card mt-5">
+            <div class="card-body">
+                <div class="float-left">
+                    <div th:text="${weatherObj.name}" class="forecast-name"></div>
+                    <span th:text="${weatherObj.areaDescription}" class="forecast-description"></span>
+                    <br>
+                    <span th:text="${weatherObj.temperature}+ ' degree and '+${weatherObj.weather}"></span>
+                </div>
+                <div class="float-right">
+                    <img th:src="${weatherObj.weatherImg}" class="weather-image"/>
+                </div>
+            </div>
+        </div>
+        <form class="text-center" method="post" th:action="@{/addLocation}" th:object="${weatherObj}">
+            <input type="hidden" th:field="*{weather}">
+            <input type="hidden" th:field="*{name}">
+            <input type="hidden" th:field="*{areaDescription}">
+            <input type="hidden" th:field="*{weatherImg}">
+            <input type="hidden" th:field="*{temperature}">
+            <input type="hidden" th:value="${_csrf.token}" th:name="${_csrf.parameterName}">
+            <button class="btn btn-primary form-control mt-3 text-center" style="width: 94%" type="submit">Add Location</button>
+        </form>
+    </div>
+</div>
+
+<div th:replace="footer"></div>
+</body>
+</html>
