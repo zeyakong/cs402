@@ -81,22 +81,26 @@ public class MainController {
         return "profile";
     }
 
-    @PostMapping("/avatars/{uid}")
-    public String updateAvatar(
+    @RequestMapping(value = "/addAvatar/{uid}" , method = RequestMethod.POST)
+    public void updateAvatar(
             @RequestParam("file") MultipartFile file,
-            @PathVariable String uid
+            @PathVariable String uid,
+            HttpServletResponse res
     ){
-        if(file!=null){
+        if(!file.isEmpty()){
             System.out.println("get file");
             System.out.println(uid);
             try{
                 imageService.save(file,uid);
-            }catch (Exception e){
-                System.out.println(e);
-                return "home";
+            }catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        return "home";
+        try {
+            res.sendRedirect("/profile");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

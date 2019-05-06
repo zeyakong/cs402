@@ -15,21 +15,21 @@ public class MockDataService {
 	@Autowired
 	PasswordEncoder encoder;
 
-	@PostConstruct
-	public void users() {
-		userService.deleteAll();
-		
-		User user = new User();
-		user.setEmail("jim@ebox.edu");
-		user.setUsername("jim");
-		user.setPassword( encoder.encode("123") );
-		userService.save( user );
-		
-		user = new User();
-		user.setEmail("jill@ebox.edu");
-		user.setUsername("jill");
-		user.setPassword( encoder.encode("123") );		
-		userService.save( user );
-	}
+//	@PostConstruct
+//	public void users() {
+//		userService.deleteAll();
+//
+//		User user = new User();
+//		user.setEmail("jim@ebox.edu");
+//		user.setUsername("jim");
+//		user.setPassword( encoder.encode("123") );
+//		userService.save( user );
+//
+//		user = new User();
+//		user.setEmail("jill@ebox.edu");
+//		user.setUsername("jill");
+//		user.setPassword( encoder.encode("123") );
+//		userService.save( user );
+//	}
 }
 
