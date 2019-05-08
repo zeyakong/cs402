@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
+import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -81,15 +82,21 @@ public class MainController {
         return "profile";
     }
 
-    @RequestMapping(value = "/addAvatar/{uid}" , method = RequestMethod.POST)
+    @RequestMapping(value = "/avatars/{uid}", method= RequestMethod.GET)
+    public @ResponseBody
+    byte[] getAvatarAbsolutePath(
+            @PathVariable String uid
+    ){
+        return imageService.load(uid);
+    }
+
+    @RequestMapping(value = "/avatars/{uid}" , method = RequestMethod.POST)
     public void updateAvatar(
             @RequestParam("file") MultipartFile file,
             @PathVariable String uid,
             HttpServletResponse res
     ){
         if(!file.isEmpty()){
-            System.out.println("get file");
-            System.out.println(uid);
             try{
                 imageService.save(file,uid);
             }catch (IOException e) {

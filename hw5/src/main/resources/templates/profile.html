@@ -12,7 +12,7 @@
 
     <img th:src="${imgURL}" class="mt-3 avatar">
     <div class="card mt-4">
-        <form class="card-body" enctype="multipart/form-data" method="post" th:action="'/addAvatar/' + ${user.getId()}">
+        <form class="card-body" enctype="multipart/form-data" method="post" th:action="'/avatars/' + ${user.getId()}">
             <input type="hidden" th:value="${_csrf.token}" th:name="${_csrf.parameterName}">
             <p>
                 Update profile imagine
