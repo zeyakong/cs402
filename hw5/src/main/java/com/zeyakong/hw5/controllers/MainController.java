@@ -35,8 +35,10 @@ public class MainController {
             @RequestParam(name = "lat", required = false, defaultValue = "")
                     String lat,
             @RequestParam(name = "lon", required = false, defaultValue = "")
-                    String lon, Model model
+                    String lon, Model model,Principal principal
     ) {
+        User u= userService.findByUsername(principal.getName());
+        model.addAttribute("imgURL",imageService.getAvatarUrl(u));
         Weather w = weatherService.getWeatherObject(lat, lon);
         if (w != null) {
             model.addAttribute("weatherObj", w);
