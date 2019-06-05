@@ -4,10 +4,10 @@
 The source code for assignments of the cs402 web application course.
 
 ### hw1
-using Java to bulid a small server which can recieve the HTTP requests and generate correct HTTP responses.
+Using Java to bulid a small server which can recieve the HTTP requests and generate correct HTTP responses.
 
 ### hw2 
-.This application was developed by using Node.js as a single page web application which allows a user to play the game called connect four. All the HTTP requests and responses are managed by ajax functions.
+This application was developed by using Node.js as a single page web application which allows a user to play the game called connect four. All the HTTP requests and responses are managed by ajax functions.
 
 ### hw3 
 A extension of Hw2. In hw3, the data of the game are presisted at MongoDB. In addition, the application also required a user login and logout functionalities. All of the user information are stored at the database. This small application was also implemented by using CSRF token to improve the security of the application.
